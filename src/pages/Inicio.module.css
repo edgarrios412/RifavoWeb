@@ -1,0 +1,26 @@
+.barraDiagonal{
+    margin-top: 300px;
+    /* transform: skewY(-3deg); */
+    background-color: hsl(128, 47%, 67%);
+    height: 400px;
+    width: 100%;
+    /* position: absolute; */
+}
+
+.barraDiagonal2{
+    z-index: -10;
+    transform: skewY(-3deg) !important;
+    background-color: #238874;
+    height: 200px;
+    width: 100%;
+    position: relative;
+    /* position: absolute; */
+}
+
+.barraTexto{
+    transform: skewY(3deg) !important;
+    margin: auto;
+    position: relative;
+    padding-top: 50px;
+    text-align: center;
+}

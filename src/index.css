@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-move {
+  background-size: 200% 200%;
+}
+
+@font-face {
+  font-family: 'GeistSans';
+  src: url('/fonts/GeistVF.woff2') format('woff2'),
+       url('/fonts/GeistVF.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: CIBFont;
+  src: url("./assets/CIBFontSans-Bold.ttf");
+}
+
+@font-face {
+  font-family: OpenSans;
+  src: url("./assets/OpenSans-Regular.ttf");
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+    0%  {box-shadow: 16px 0 #939393, -16px 0 #c3c3c3;background: #939393 }
+    33% {box-shadow: 16px 0 #939393, -16px 0 #c3c3c3;background: #c3c3c3}
+    66% {box-shadow: 16px 0 #c3c3c3,-16px 0 #939393; background: #c3c3c3}
+    100%{box-shadow: 16px 0 #c3c3c3,-16px 0 #939393; background: #939393 }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f6f6f6; /* Color de fondo del track del scrollbar */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bebebe; /* Color del scrollbar */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a6a6a6; /* Color del scrollbar cuando se hace hover */
+}
+
+/* Estilos para Firefox */
+
+
+body {
+  font-family: CIBFont;
+  color: white;
+  font-family: "GeistSans";
+  background-color: black;
+}
+
+.scroll-container {
+  height: 100vh;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  scroll-behavior: smooth; /* Añade esta línea */
+}
+
+.scroll-section {
+  height: 100vh;
+  scroll-snap-align: start;
+}
+
+
+  
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+
