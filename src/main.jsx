@@ -5,14 +5,17 @@ import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "./components/ui/toaster.jsx";
 import ScrollToTop from "./utils/helpers/scrollToTop.js";
+import { UserProvider } from "./components/context/UserProvider.jsx";
 
-// axios.defaults.baseURL = "https://back-teldip.onrender.com";
-axios.defaults.baseURL = 'http://localhost:3001';
+axios.defaults.baseURL = "https://rifavoback.onrender.com";
+// axios.defaults.baseURL = 'http://localhost:3001';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-      <Toaster/>
-      <ScrollToTop/>
-        <App />
+    <UserProvider>
+      <Toaster />
+      <ScrollToTop />
+      <App />
+    </UserProvider>
   </BrowserRouter>
 );

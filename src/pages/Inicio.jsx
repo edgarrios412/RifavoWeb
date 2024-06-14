@@ -17,12 +17,19 @@ import ani3 from '../../public/animations/3.json';
 import BotAyudante from "@/components/layout/BotAyudante";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/layout/NavBar";
+import axios from "axios";
 
 const Inicio = () => {
 
     const [option, setOption] = useState(1)
     const [work, setWork] = useState(1)
     const navigation = useNavigate()
+
+    const [sorteos, setSorteos] = useState([])
+
+    useEffect(() => {
+        axios.get("/sorteo/listar/all").then(({data}) => setSorteos(data))
+    },[])
 
     return (
         <>
@@ -32,7 +39,6 @@ const Inicio = () => {
                 </DialogTrigger>
                 <BotAyudante />
             </Dialog>
-            <NavBar />
             <div>
                 <div className="px-5 sm:px-20 lg:px-0 text-start flex flex-col-reverse pt-20 py-0 lg:py-64 lg:flex-row items-center justify-evenly min-h-[60vh]">
                     <motion.div initial={{ x: -100 }}
@@ -108,118 +114,21 @@ const Inicio = () => {
                     <div>
                         <h1 className="text-[35px] sm:text-[45px] lg:text-[60px] mb-20 font-extrabold">Sorteos activos</h1>
                         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-20">
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
+                            {sorteos.map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
+                                    <img src={s.image[0]} className="rounded-lg px-10 py-4" />
                                     <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
+                                    <h2 className="font-bold text-lg my-2">{s.premio1}</h2>
+                                    <p className="text-slate-500 mb-2">{s.mindesc}</p>
                                     <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
+                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1" />
+                                    {s.cantidadTicket*0.6 > s.tickets.length ? <p className="text-sm text-slate-500">Faltan <b>{(s.cantidadTicket*0.6)-s.tickets.length}</b> tickets para iniciar</p>
+                                    :<p className="text-sm text-slate-500">Sorteo listo para empezar!</p>}
                                     </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
+                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>{Number(s.precioTicket).toLocaleString()} COP</p>
+                                    {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/>{s.fechaSorteo} 10:40PM</p> :<p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>}
+                                    <Button onClick={() => navigation(`/sorteo/${s.id}`)} className="my-4">Ver detalle del sorteo</Button>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
-                                <div>
-                                    <img src={moto3} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
-                                    <h2 className="font-bold text-lg my-2">Moto Suzuki 0KM</h2>
-                                    <p className="text-slate-500 mb-2">Participa y tendrás la posibilidad de ganar hasta 3 premios exclusivos, no te lo pierdas!</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={74} className="w-[60%] mb-1" />
-                                    <p className="text-sm text-slate-500">Faltan <b>26</b> tickets para iniciar</p>
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>45,000 COP</p>
-                                    <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>
-                                    <Button onClick={() => navigation("/sorteo/1")} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
-                                </div>
-                            </div>
+                            </div>)}
                         </div>
                     </div>
                 </div>
