@@ -52,7 +52,7 @@ const Inicio = () => {
                             <Gift className="w-8 h-8" />
                             <div>
                                 <p className="font-bold">¡Estás de suerte!</p>
-                                <p className="text-slate-500">Tenemos 6 sorteos activos</p>
+                                <p className="text-slate-500">Tenemos {sorteos?.length} sorteos activos</p>
                             </div>
 
                         </div>

@@ -167,10 +167,10 @@ const NavBar = () => {
                                                     </Avatar>
                                                     <div className="space-y-1">
                                                         <h4 className="text-sm font-semibold">
-                                                            {obfuscateName(t.sorteo.ganadores.find(g => g.premioNumero == 1).user.name)} {obfuscateName(t.sorteo.ganadores.find(g => g.premioNumero == 1).user.lastname)}
+                                                            {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.name)} {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.lastname)}
                                                         </h4>
                                                         <p className="text-sm">
-                                                            {obfuscateEmail(t.sorteo.ganadores.find(g => g.premioNumero == 1).user.email)}
+                                                            {obfuscateEmail(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.email)}
                                                         </p>
                                                         <div className="flex items-center pt-2">
                                                             <CalendarDays className="mr-1 h-4 w-4 opacity-70" />{" "}
