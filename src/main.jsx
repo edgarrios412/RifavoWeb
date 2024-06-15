@@ -6,9 +6,10 @@ import axios from "axios";
 import { Toaster } from "./components/ui/toaster.jsx";
 import ScrollToTop from "./utils/helpers/scrollToTop.js";
 import { UserProvider } from "./components/context/UserProvider.jsx";
+import MailDesign from "./pages/MailDesign.jsx";
 
-axios.defaults.baseURL = "https://rifavoback.onrender.com";
-// axios.defaults.baseURL = 'http://localhost:3001';
+// axios.defaults.baseURL = "https://rifavoback.onrender.com";
+axios.defaults.baseURL = 'http://localhost:3001';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Toaster />
       <ScrollToTop />
       <App />
+      {/* <MailDesign/> */}
     </UserProvider>
   </BrowserRouter>
 );
