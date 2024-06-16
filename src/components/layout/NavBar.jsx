@@ -85,7 +85,13 @@ const NavBar = () => {
         axios.post("/user/recovery/password", form).then(({ data }) => toast({
             title:"Correo enviado",
             description:data
-        }))
+        }),(e) => {
+            return toast({
+                variant:"destructive",
+                title: "Ha ocurrido un error",
+                description: e.response.data,
+            })
+        })
     }
 
     const registroUsuario = () => {

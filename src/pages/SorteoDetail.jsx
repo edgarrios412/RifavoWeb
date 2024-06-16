@@ -12,7 +12,7 @@ import ani1 from '../../public/animations/empty.json';
 import winner from '../../public/animations/winner.json';
 import { CalendarDays, ChevronLeft, CreditCard, Ticket, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Lottie from "lottie-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
@@ -30,6 +30,32 @@ const SorteoDetail = () => {
     const [filter, setFilter] = useState("")
     const [login, setLogin] = useState(true)
     const [hayGanadores, setHayGanadores] = useState(false)
+    const [invitado, setInvitado] = useState({})
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const env = queryParams.get('env');
+    const queryId = queryParams.get('id');
+    
+    useEffect(() => {
+        if(queryId && usuario){
+            axios.get("https://api-sandbox.wompi.co/v1/transactions/"+queryId).then(({data}) => {
+                if(data.data.status == "APPROVED"){
+                    const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
+                    if(numerosComprados){
+                        axios.post("/sorteo/comprar/tickets", { tickets: numerosComprados, sorteoId: id, userId: usuario?.id })
+                    .then(({ data }) => {
+                        localStorage.removeItem("numerosComprados")
+                        toast({
+                            title: "Transacción exitosa",
+                            description: data,
+                        }); axios.get(`/sorteo/listar/${id}`).then(({ data }) => { setSorteo(data); setMisNumeros([]); setNumerosComprados(data.tickets.map(t => t.numero)) })
+                    })
+                    }
+                }
+            })
+        }
+    },[usuario])
 
     const filteredNumeros = numeros.filter(index => index.toString().padStart(3, '0').includes(filter));
 
@@ -37,6 +63,14 @@ const SorteoDetail = () => {
         const { name, value } = e.target
         setForm({
             ...form,
+            [name]: value
+        })
+    }
+
+    const handleInvitado = (e) => {
+        const { name, value } = e.target
+        setInvitado({
+            ...invitado,
             [name]: value
         })
     }
@@ -54,6 +88,7 @@ const SorteoDetail = () => {
         const monto = misNumeros.length * sorteo.precioTicket
         // setNumerosComprados([...numerosComprados, ...misNumeros])
         // setMisNumeros([])
+        localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
         console.log(reference)
         var checkout = new WidgetCheckout({
@@ -61,8 +96,9 @@ const SorteoDetail = () => {
             amountInCents: monto + "00",
             reference: reference,
             publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            redirectUrl: `https://rifavo.com/sorteo/${id}`
             //   publicKey: "pub_test_w28dxS2v9clmkb8UbFrlkw3GxBUx3bsq",
-            redirectUrl: 'http://localhost:5173/perfil'
+            // redirectUrl: `http://localhost:5173/sorteo/${id}`
         });
         console.log(checkout)
         checkout.open(function (result) {
@@ -70,7 +106,7 @@ const SorteoDetail = () => {
             console.log(result)
             if (transaction.status == "APPROVED") {
                 // SI TODO SALE BIEN ¿QUE HAGO?
-                axios.post("/sorteo/comprar/tickets", { tickets: misNumeros, sorteoId: id, userId: usuario?.id })
+                axios.post("/sorteo/comprar/tickets", { tickets: misNumeros, sorteoId: id, userId: usuario.id })
                     .then(({ data }) => {
                         toast({
                             title: "Transacción exitosa",
@@ -88,7 +124,23 @@ const SorteoDetail = () => {
         });
     };
 
-    const procesarPago = () => {
+    const registroRapido = async () => {
+        try {
+            const { data: password } = await axios.post("/user", invitado);
+            alert(password.users)
+            const { data } = await axios.post("/user/auth", { email: invitado.email, password: password.users });
+            setUsuario(data.user);
+            localStorage.setItem("token", data.token);
+        } catch (e) {
+            return toast({
+                variant: "destructive",
+                title: "Ha ocurrido un error",
+                description: e.response.data,
+            })
+        }
+    }
+
+    const procesarPago = async () => {
         if (!usuario) return toast({
             variant: "destructive",
             title: "Ha ocurrido un error",
@@ -277,26 +329,23 @@ const SorteoDetail = () => {
                                 <h2 className="font-bold text-lg mb-4">Ingresa los siguientes datos</h2>
                                 <div>
                                     <Label>Nombre</Label>
-                                    <Input name="name" placeholder="Ingresa tu nombre" />
+                                    <Input onChange={handleInvitado} name="name" placeholder="Ingresa tu nombre" />
                                 </div>
                                 <div className="mt-4">
                                     <Label>Apellido</Label>
-                                    <Input name="name" placeholder="Ingresa tu apellido" />
+                                    <Input onChange={handleInvitado} name="lastname" placeholder="Ingresa tu apellido" />
                                 </div>
                                 <div className="mt-4">
                                     <Label>Correo electrónico</Label>
-                                    <Input name="name" placeholder="Ingresa tu correo" />
-                                </div>
-                                <div className="mt-4">
-                                    <Label>Cedula de identidad</Label>
-                                    <Input name="name" placeholder="Ingresa tu cedula de identidad" />
+                                    <Input onChange={handleInvitado} name="email" placeholder="Ingresa tu correo" />
                                 </div>
                                 <div className="mt-4">
                                     <Label>Teléfono</Label>
-                                    <Input name="name" placeholder="Ingresa tu telefono" />
+                                    <Input onChange={handleInvitado} name="phone" placeholder="Ingresa tu telefono" />
                                 </div>
+                                <Button onClick={registroRapido} className="w-full mt-5">Guardar</Button>
                             </div>
-                            <div className="py-10 lg:py-0 lg:h-52 flex flex-col items-center justify-between">
+                            <div className="py-10 lg:py-0 lg:h-40 flex flex-col items-center justify-between">
                                 <Separator className="lg:block hidden" orientation="vertical" />
                                 <h1>o</h1>
                                 <Separator className="lg:block hidden" orientation="vertical" />
@@ -311,7 +360,7 @@ const SorteoDetail = () => {
                                     <Label>Contraseña</Label>
                                     <Input onChange={handleForm} name="password" type="password" placeholder="Ingresa tu contraseña" />
                                 </div>
-                                <p className="text-sm mt-3">No tienes cuenta? <span className="cursor-pointer hover:underline" onClick={() => setLogin(false)}>Registrate</span></p>
+                                {/* <p className="text-sm mt-3">No tienes cuenta? <span className="cursor-pointer hover:underline" onClick={() => setLogin(false)}>Registrate</span></p> */}
                                 <Button onClick={authenticate} className="w-full mt-5">Ingresar</Button>
                             </div> :
                                 <div>
