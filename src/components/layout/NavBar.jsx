@@ -36,13 +36,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { CalendarDays, History, LogOut, QrCode, Ticket, Trophy, User } from "lucide-react"
+import { ArrowDownToLine, CalendarDays, History, LogOut, QrCode, Ticket, Trophy, User } from "lucide-react"
 import { DownloadTableExcel } from "react-export-table-to-excel"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
 import { Separator } from "../ui/separator"
 import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import { toast } from "../ui/use-toast"
+import { PDFDownloadLink } from "@react-pdf/renderer"
+import ReciboDePago from "@/pages/plantillas/reciboDePago"
 
 const NavBar = () => {
 
@@ -148,7 +150,8 @@ const NavBar = () => {
                                     <TableHead className="w-[100px]">Ticket ID</TableHead>
                                     <TableHead>Numero</TableHead>
                                     <TableHead>Ganador</TableHead>
-                                    <TableHead className="text-right">Monto</TableHead>
+                                    {/* <TableHead className="text-right">Monto</TableHead> */}
+                                    <TableHead>Acciones</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -195,7 +198,14 @@ const NavBar = () => {
                                             </HoverCardContent>
                                         </HoverCard>
                                     </TableCell> : <TableCell className="text-slate-500"><p>Aún no hay ganador</p></TableCell>}
-                                    <TableCell className="text-right">{Number(t.sorteo.precioTicket).toLocaleString()} COP</TableCell>
+                                    {/* <TableCell className="text-right">{Number(t.sorteo.precioTicket).toLocaleString()} COP</TableCell> */}
+                                    <TableCell>
+                                        <PDFDownloadLink document={<ReciboDePago ticket={t}/>} fileName={`reciboTicket${t.id}.pdf`}>
+                                        <Button>
+                                        <ArrowDownToLine className="w-4 h-4" />    
+                                        </Button>
+                                        </PDFDownloadLink>
+                                    </TableCell>
                                 </TableRow>)}
                             </TableBody>
                         </Table>
@@ -250,9 +260,21 @@ const NavBar = () => {
                             <p className="text-normal mt-2">{ticket.sorteo.premio1}</p>
                             <p className="text-sm mt-1 text-slate-500">{ticket.sorteo.mindesc}</p>
                             <div className="flex items-center pt-1 mt-2">
-                                <Trophy className="mr-1 h-4 w-4 opacity-70" />{" "}
-                                <span className="text-xs text-muted-foreground">
+                                <Trophy color="orange" className="mr-1 h-4 w-4" />{" "}
+                                <span className="text-normal font-bold">
                                     {ticket.sorteo.numTicketGanadorP1 ?? "Aún no hay ganador"}
+                                </span>
+                            </div>
+                            <div className="flex items-center pt-1 mt-2">
+                                <Trophy color="gray" className="mr-1 h-4 w-4" />{" "}
+                                <span className="text-normal font-bold">
+                                    {ticket.sorteo.numTicketGanadorP2 ?? "Aún no hay ganador"}
+                                </span>
+                            </div>
+                            <div className="flex items-center pt-1 mt-2">
+                                <Trophy color="brown" className="mr-1 h-4 w-4" />{" "}
+                                <span className="text-normal font-bold">
+                                    {ticket.sorteo.numTicketGanadorP3 ?? "Aún no hay ganador"}
                                 </span>
                             </div>
                         </div></>}

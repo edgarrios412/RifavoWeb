@@ -159,7 +159,11 @@ const SorteoDetail = () => {
         if (paymentMethod == 1) {
             pagarAhora()
         } else if (paymentMethod == 2) {
-            alert("Logica para pagar por paypal")
+            return toast({
+                variant: "destructive",
+                title: "Ha ocurrido un error",
+                description: "Este metodo de pago estará disponible pronto",
+            })
         }
     }
 
@@ -313,11 +317,11 @@ const SorteoDetail = () => {
                         {filteredNumeros.map((index) => {
                             if (!numerosComprados.includes(index)) {
                                 return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-14 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
-                                    {index.toString().padStart(3, '0')}
+                                    {index.toString().padStart(String(sorteo.cantidadTicket).length-1, '0')}
                                 </p>)
                             } else {
                                 return (<p key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer bg-black text-white`}>
-                                    {index.toString().padStart(3, '0')}
+                                    {index.toString().padStart(String(sorteo.cantidadTicket).length-1, '0')}
                                 </p>)
                             }
                         })}
@@ -406,7 +410,7 @@ const SorteoDetail = () => {
                             <h2 className="font-bold text-lg mt-10 lg:mt-0 mb-4">Metódo de pago</h2>
                             <div className="flex gap-6">
                                 <img onClick={() => setPaymentMethod(1)} src="https://wompi.com/assets/img/metadatos/WompiLogo.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 1 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
-                                <img onClick={() => setPaymentMethod(2)} src="https://logos-world.net/wp-content/uploads/2020/08/PayPal-Logo.jpg" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
+                                <img onClick={() => setPaymentMethod(2)} src="https://d6jhcq8ww79ge.cloudfront.net/wp-content/uploads/2024/01/pay-blk-frame-v-copy-e1706628664480.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
                             </div>
                             <Button className="w-full mt-5" onClick={procesarPago}>
                                 <CreditCard className="mx-2 w-5" />
