@@ -36,26 +36,26 @@ const SorteoDetail = () => {
     const queryParams = new URLSearchParams(location.search);
     const env = queryParams.get('env');
     const queryId = queryParams.get('id');
-    
+
     useEffect(() => {
-        if(queryId && usuario){
-            axios.get("https://api-sandbox.wompi.co/v1/transactions/"+queryId).then(({data}) => {
-                if(data.data.status == "APPROVED"){
+        if (queryId && usuario) {
+            axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+                if (data.data.status == "APPROVED") {
                     const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
-                    if(numerosComprados){
+                    if (numerosComprados) {
                         axios.post("/sorteo/comprar/tickets", { tickets: numerosComprados, sorteoId: id, userId: usuario?.id })
-                    .then(({ data }) => {
-                        localStorage.removeItem("numerosComprados")
-                        toast({
-                            title: "Transacción exitosa",
-                            description: data,
-                        }); axios.get(`/sorteo/listar/${id}`).then(({ data }) => { setSorteo(data); setMisNumeros([]); setNumerosComprados(data.tickets.map(t => t.numero)) })
-                    })
+                            .then(({ data }) => {
+                                localStorage.removeItem("numerosComprados")
+                                toast({
+                                    title: "Transacción exitosa",
+                                    description: data,
+                                }); axios.get(`/sorteo/listar/${id}`).then(({ data }) => { setSorteo(data); setMisNumeros([]); setNumerosComprados(data.tickets.map(t => t.numero)) })
+                            })
                     }
                 }
             })
         }
-    },[usuario])
+    }, [usuario])
 
     const filteredNumeros = numeros.filter(index => index.toString().padStart(3, '0').includes(filter));
 
@@ -84,20 +84,26 @@ const SorteoDetail = () => {
         );
     };
 
-    const pagarAhora = () => {
+    const pagarAhora = async () => {
         const monto = misNumeros.length * sorteo.precioTicket
         // setNumerosComprados([...numerosComprados, ...misNumeros])
         // setMisNumeros([])
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
-        console.log(reference)
+        var cadenaConcatenada = String(reference)+String(monto)+"00COP"+"prod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp";
+        //Ejemplo
+        const encondedText = new TextEncoder().encode(cadenaConcatenada);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
         var checkout = new WidgetCheckout({
+            signature: hashHex,
             currency: "COP",
             amountInCents: monto + "00",
             reference: reference,
             publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
             redirectUrl: `https://rifavo.com/sorteo/${id}`
-            //   publicKey: "pub_test_w28dxS2v9clmkb8UbFrlkw3GxBUx3bsq",
+            // publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
             // redirectUrl: `http://localhost:5173/sorteo/${id}`
         });
         console.log(checkout)
@@ -317,11 +323,11 @@ const SorteoDetail = () => {
                         {filteredNumeros.map((index) => {
                             if (!numerosComprados.includes(index)) {
                                 return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-14 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
-                                    {index.toString().padStart(String(sorteo.cantidadTicket).length-1, '0')}
+                                    {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
                                 </p>)
                             } else {
                                 return (<p key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer bg-black text-white`}>
-                                    {index.toString().padStart(String(sorteo.cantidadTicket).length-1, '0')}
+                                    {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
                                 </p>)
                             }
                         })}
