@@ -32,6 +32,8 @@ const SorteoDetail = () => {
     const [hayGanadores, setHayGanadores] = useState(false)
     const [invitado, setInvitado] = useState({})
 
+    const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const env = queryParams.get('env');
@@ -39,7 +41,8 @@ const SorteoDetail = () => {
 
     useEffect(() => {
         if (queryId && usuario) {
-            axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+            // axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+                axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
                 if (data.data.status == "APPROVED") {
                     const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
                     if (numerosComprados) {
@@ -90,23 +93,24 @@ const SorteoDetail = () => {
         // setMisNumeros([])
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
-        var cadenaConcatenada = String(reference)+String(monto)+"00COP"+"prod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp";
+        var cadenaConcatenada = `${reference}${monto}00COPprod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp`;
+        console.log(cadenaConcatenada)
         //Ejemplo
         const encondedText = new TextEncoder().encode(cadenaConcatenada);
         const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+        console.log(hashHex)
         var checkout = new WidgetCheckout({
-            signature: hashHex,
             currency: "COP",
             amountInCents: monto + "00",
             reference: reference,
             // publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
             redirectUrl: `https://rifavo.com/sorteo/${id}`,
             publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
-            // redirectUrl: `http://localhost:5173/sorteo/${id}`
+            // redirectUrl: `http://localhost:5173/sorteo/${id}`,
+            signature: { integrity: hashHex }
         });
-        console.log(checkout)
         checkout.open(function (result) {
             var transaction = result.transaction;
             console.log(result)
@@ -131,6 +135,31 @@ const SorteoDetail = () => {
     };
 
     const registroRapido = async () => {
+        if(!invitado.name?.length || !invitado.lastname?.length || !invitado.phone?.length || !invitado.email?.length) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "Debes rellenar todos los campos para poder registrarte",
+        })
+        if(invitado.name.length < 3) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "El nombre debe tener más de 3 caracteres",
+        })
+        if(invitado.lastname.length < 3) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "El apellido debe tener más de 3 caracteres",
+        })
+        if(invitado.phone.length != 10) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "Debes ingresar un numero de telefono válido, ejemplo: 3201234567",
+        })
+        if(!regexMail.test(invitado.email)) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "Debes ingresar un correo electrónico válido",
+        })
         try {
             const { data: password } = await axios.post("/user", invitado);
             alert(password.users)
@@ -177,7 +206,11 @@ const SorteoDetail = () => {
         axios.post("/user/auth", form).then(({ data }) => {
             setUsuario(data.user)
             localStorage.setItem("token", data.token)
-        })
+        },(e) => toast({
+            variant: "destructive",
+            title: "Ha ocurrido un error",
+            description: e.response.data,
+        }))
     }
 
     const registroUsuario = () => {
@@ -195,7 +228,7 @@ const SorteoDetail = () => {
             setLogin(true)
             toast({
                 title: "Registro exitoso",
-                description: "Ya puedes acceder a tu cuenta",
+                description: "Hemos enviado tu contraseña al correo electrónico que colocaste",
             })
         }, (e) => toast({
             variant: "destructive",
@@ -309,7 +342,7 @@ const SorteoDetail = () => {
             <div className="my-20 mx-5 lg:mx-0 text-start flex items-center justify-center gap-64 min-h-[60vh]">
                 <div>
                     <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
-                    <Input placeholder="Filtrar tus numeros favoritos" onChange={(e) => setFilter(e.target.value)} />
+                    <Input type="number" placeholder="Filtrar tus numeros favoritos" onChange={(e) => setFilter(e.target.value)} />
                     {
                         !filteredNumeros.length &&
                         <div className="flex flex-col items-center">
@@ -346,12 +379,12 @@ const SorteoDetail = () => {
                                     <Input onChange={handleInvitado} name="lastname" placeholder="Ingresa tu apellido" />
                                 </div>
                                 <div className="mt-4">
-                                    <Label>Correo electrónico</Label>
-                                    <Input onChange={handleInvitado} name="email" placeholder="Ingresa tu correo" />
-                                </div>
-                                <div className="mt-4">
                                     <Label>Teléfono</Label>
                                     <Input onChange={handleInvitado} name="phone" placeholder="Ingresa tu telefono" />
+                                </div>
+                                <div className="mt-4">
+                                    <Label>Correo electrónico</Label>
+                                    <Input onChange={handleInvitado} name="email" placeholder="Ingresa tu correo" />
                                 </div>
                                 <Button onClick={registroRapido} className="w-full mt-5">Guardar</Button>
                             </div>
@@ -416,7 +449,7 @@ const SorteoDetail = () => {
                             <h2 className="font-bold text-lg mt-10 lg:mt-0 mb-4">Metódo de pago</h2>
                             <div className="flex gap-6">
                                 <img onClick={() => setPaymentMethod(1)} src="https://wompi.com/assets/img/metadatos/WompiLogo.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 1 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
-                                <img onClick={() => setPaymentMethod(2)} src="https://d6jhcq8ww79ge.cloudfront.net/wp-content/uploads/2024/01/pay-blk-frame-v-copy-e1706628664480.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
+                                {/* <img onClick={() => setPaymentMethod(2)} src="https://d6jhcq8ww79ge.cloudfront.net/wp-content/uploads/2024/01/pay-blk-frame-v-copy-e1706628664480.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} /> */}
                             </div>
                             <Button className="w-full mt-5" onClick={procesarPago}>
                                 <CreditCard className="mx-2 w-5" />

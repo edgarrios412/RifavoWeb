@@ -57,6 +57,8 @@ const NavBar = () => {
     const [ticketId, setTicketId] = useState("")
     const [ticket, setTicket] = useState(null)
 
+    const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
     const { usuario, setUsuario } = useContext(UserContext)
 
     const handleForm = (e) => {
@@ -107,6 +109,31 @@ const NavBar = () => {
             title: "Campos incompletos",
             description: "Debes rellenar todos los campos para poder registrarte",
         })
+        if(form.name.length < 4) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "El nombre debe tener más de 3 caracteres",
+        })
+        if(form.lastname.length < 3) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "El apellido debe tener más de 3 caracteres",
+        })
+        if(form.phone.length != 10) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "Debes ingresar un numero de telefono válido, ejemplo: 3201234567",
+        })
+        if(!regexMail.test(form.email)) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "Debes ingresar un correo electrónico válido",
+        })
+        if(form.password.length < 8) return toast({
+            variant:"destructive",
+            title: "Campos incompletos",
+            description: "La contraseña debe tener al menos 8 caracteres",
+        })
         axios.post("/user", form).then(({ data }) => {
             setLogin(true)
             toast({
@@ -121,7 +148,11 @@ const NavBar = () => {
     }
 
     const validarTicket = () => {
-        axios.get(`/sorteo/buscar/ticket/${ticketId}`).then(({ data }) => setTicket(data))
+        axios.get(`/sorteo/buscar/ticket/${ticketId}`).then(({ data }) => setTicket(data),(e) => toast({
+            variant:"destructive",
+            title: "Ha ocurrido un error",
+            description: e.response.data,
+        }))
     }
 
     return (
@@ -353,8 +384,9 @@ const NavBar = () => {
                                 <Input value={form?.password} onChange={handleForm} name="password" placeholder="Ingresa tu contraseña" type="password" />
                             </div>
                             <p onClick={() => setRecovery(true)} className="text-sm cursor-pointer hover:underline">Olvidé mi contraseña</p>
-                            <Button className="bg-orange-400" onClick={authenticate}>Ingresar</Button>
-                            <Button onClick={() => setLogin(false)}>Aún no tengo cuenta</Button>
+                            <Button className="" onClick={authenticate}>Ingresar</Button>
+                            <p className="text-sm">Aún no tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(false)} >Registrate</span></p>
+                            {/* <Button onClick={() => setLogin(false)}>Aún no tengo cuenta</Button> */}
                         </DialogContent>) : <DialogContent>
                             {/* REGISTRO */}
                             <DialogHeader>
@@ -385,8 +417,9 @@ const NavBar = () => {
                                 <Label>Repetir contraseña</Label>
                                 <Input value={form?.password2} onChange={handleForm} name="password2" placeholder="Repite tu contraseña" type="password" />
                             </div>
-                            <Button className="bg-orange-400" onClick={registroUsuario}>Registrarme</Button>
-                            <Button onClick={() => setLogin(true)}>Ya tengo cuenta</Button>
+                            <Button className="" onClick={registroUsuario}>Registrarme</Button>
+                            <p className="text-sm">Ya tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(true)} >Ingresa</span></p>
+                            {/* <Button onClick={() => setLogin(true)}>Ya tengo cuenta</Button> */}
                         </DialogContent>}
                     </Dialog>}
             </div>

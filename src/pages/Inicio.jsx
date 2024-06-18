@@ -82,21 +82,21 @@ const Inicio = () => {
                             <div className="flex justify-end items-center gap-5 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Registrate</p>
-                                    <p className="text-slate-500">Para que podamos diferenciarte entre los demás debes registrar e ingresar</p>
+                                    <p className="text-slate-500">Para que podamos diferenciarte entre los demás debes registrarte e ingresar</p>
                                 </div>
                                 <Fingerprint className="w-8 h-8 sm:block hidden" />
                             </div>
                             <div className="flex justify-end items-center gap-3 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Compra tus tickets</p>
-                                    <p className="text-slate-500">Adquiere tantos tickets como quieras, mientras más tickets más posibilidad</p>
+                                    <p className="text-slate-500">Adquiere tantos tickets como quieras, mientras más tickets más posibilidad de ganar</p>
                                 </div>
                                 <Ticket className="w-8 h-8 sm:block hidden" />
                             </div>
                             <div className="flex justify-end items-center gap-3 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Espera los resultados</p>
-                                    <p className="text-slate-500">Cuando el temporizados del sorteo llegue a 0 se anunciará el ganador!</p>
+                                    <p className="text-slate-500">Cuando el temporizador del sorteo llegue a 0 se anunciará el ganador!</p>
                                 </div>
                                 <Dices className="w-8 h-8 sm:block hidden" />
                             </div>

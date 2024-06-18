@@ -6,6 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import imgcuadrada from '../../../public/imgcuadrada.jpg';
  
 const Carrusel = ({imagenes}) => {
   return (
@@ -15,9 +16,9 @@ const Carrusel = ({imagenes}) => {
           <CarouselItem key={index}>
             <div className="p-1">
               <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
+                <CardContent className="flex aspect-square items-center justify-center p-2">
                   {/* <span className="text-4xl font-semibold">{index + 1}</span> */}
-                  <img src={img}></img>
+                  <img className="rounded-sm" src={img}></img>
                 </CardContent>
               </Card>
             </div>
