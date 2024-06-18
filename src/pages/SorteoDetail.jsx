@@ -101,9 +101,9 @@ const SorteoDetail = () => {
             currency: "COP",
             amountInCents: monto + "00",
             reference: reference,
-            publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
-            redirectUrl: `https://rifavo.com/sorteo/${id}`
-            // publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
+            // publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            redirectUrl: `https://rifavo.com/sorteo/${id}`,
+            publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
             // redirectUrl: `http://localhost:5173/sorteo/${id}`
         });
         console.log(checkout)
