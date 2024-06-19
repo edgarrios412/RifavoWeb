@@ -46,7 +46,21 @@ import { toast } from "../ui/use-toast"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import ReciboDePago from "@/pages/plantillas/reciboDePago"
 
+import GoogleLogin from "react-google-login"
+import { gapi } from "gapi-script"
+
 const NavBar = () => {
+
+    const clientId = "934325083803-p97gi9ef7ckittt88mep8egc5rpfttkb.apps.googleusercontent.com"
+
+    useEffect(() => {
+        const start = () => {
+            gapi.auth2.init({
+                clientId: clientId
+            })
+        }
+        gapi.load("client:auth2", start)
+    }, [])
 
     const [login, setLogin] = useState(true)
     const [isLogged, setIsLogged] = useState(false)
@@ -77,8 +91,8 @@ const NavBar = () => {
         axios.post("/user/auth", form).then(({ data }) => {
             setUsuario(data.user)
             localStorage.setItem("token", data.token)
-        },(e) => toast({
-            variant:"destructive",
+        }, (e) => toast({
+            variant: "destructive",
             title: "Ha ocurrido un error",
             description: e.response.data,
         }))
@@ -87,11 +101,11 @@ const NavBar = () => {
 
     const recoveryPassword = () => {
         axios.post("/user/recovery/password", form).then(({ data }) => toast({
-            title:"Correo enviado",
-            description:data
-        }),(e) => {
+            title: "Correo enviado",
+            description: data
+        }), (e) => {
             return toast({
-                variant:"destructive",
+                variant: "destructive",
                 title: "Ha ocurrido un error",
                 description: e.response.data,
             })
@@ -100,37 +114,37 @@ const NavBar = () => {
 
     const registroUsuario = () => {
         if (form.password !== form.password2) return toast({
-            variant:"destructive",
+            variant: "destructive",
             title: "Las contraseñas no coinciden",
             description: "Asegurate de escribir la contraseña correctamente en ambos inputs",
         })
-        if(!form.name?.length || !form.lastname?.length || !form.phone?.length || !form.email?.length) return toast({
-            variant:"destructive",
+        if (!form.name?.length || !form.lastname?.length || !form.phone?.length || !form.email?.length) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes rellenar todos los campos para poder registrarte",
         })
-        if(form.name.length < 4) return toast({
-            variant:"destructive",
+        if (form.name.length < 4) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "El nombre debe tener más de 3 caracteres",
         })
-        if(form.lastname.length < 3) return toast({
-            variant:"destructive",
+        if (form.lastname.length < 3) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "El apellido debe tener más de 3 caracteres",
         })
-        if(form.phone.length != 10) return toast({
-            variant:"destructive",
+        if (form.phone.length != 10) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes ingresar un numero de telefono válido, ejemplo: 3201234567",
         })
-        if(!regexMail.test(form.email)) return toast({
-            variant:"destructive",
+        if (!regexMail.test(form.email)) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes ingresar un correo electrónico válido",
         })
-        if(form.password.length < 8) return toast({
-            variant:"destructive",
+        if (form.password.length < 8) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "La contraseña debe tener al menos 8 caracteres",
         })
@@ -140,16 +154,51 @@ const NavBar = () => {
                 title: "Registro exitoso",
                 description: "Ya puedes acceder a tu cuenta",
             })
-        },(e) => toast({
-            variant:"destructive",
+        }, (e) => toast({
+            variant: "destructive",
             title: "Ha ocurrido un error",
             description: e.response.data,
         }))
     }
 
     const validarTicket = () => {
-        axios.get(`/sorteo/buscar/ticket/${ticketId}`).then(({ data }) => setTicket(data),(e) => toast({
-            variant:"destructive",
+        axios.get(`/sorteo/buscar/ticket/${ticketId}`).then(({ data }) => setTicket(data), (e) => toast({
+            variant: "destructive",
+            title: "Ha ocurrido un error",
+            description: e.response.data,
+        }))
+    }
+
+    const ingresarConGoogle = (response) => {
+        console.log(response)
+        axios.post("/user/auth", { email: response.profileObj.email, password: response.googleId }).then(({ data }) => {
+            setUsuario(data.user)
+            localStorage.setItem("token", data.token)
+        }, (e) => toast({
+            variant: "destructive",
+            title: "Ha ocurrido un error",
+            description: e.response.data,
+        }))
+        setIsOpen(0)
+    }
+
+    const registrarConGoogle = (response) => {
+        console.log(response)
+        axios.post("/user", {
+            email: response.profileObj.email,
+            password: response.googleId,
+            name: response.profileObj.name,
+            lastname: "",
+            phone: "",
+        }).then(({ data }) => {
+            setIsOpen(0)
+            toast({
+                title: "Registro exitoso",
+                description: "Tu registro con Google ha sido exitoso",
+            })
+            ingresarConGoogle(response)
+        }, (e) => toast({
+            variant: "destructive",
             title: "Ha ocurrido un error",
             description: e.response.data,
         }))
@@ -231,10 +280,10 @@ const NavBar = () => {
                                     </TableCell> : <TableCell className="text-slate-500"><p>Aún no hay ganador</p></TableCell>}
                                     {/* <TableCell className="text-right">{Number(t.sorteo.precioTicket).toLocaleString()} COP</TableCell> */}
                                     <TableCell>
-                                        <PDFDownloadLink document={<ReciboDePago ticket={t}/>} fileName={`reciboTicket${t.id}.pdf`}>
-                                        <Button>
-                                        <ArrowDownToLine className="w-4 h-4" />    
-                                        </Button>
+                                        <PDFDownloadLink document={<ReciboDePago ticket={t} />} fileName={`reciboTicket${t.id}.pdf`}>
+                                            <Button>
+                                                <ArrowDownToLine className="w-4 h-4" />
+                                            </Button>
                                         </PDFDownloadLink>
                                     </TableCell>
                                 </TableRow>)}
@@ -385,6 +434,12 @@ const NavBar = () => {
                             </div>
                             <p onClick={() => setRecovery(true)} className="text-sm cursor-pointer hover:underline">Olvidé mi contraseña</p>
                             <Button className="" onClick={authenticate}>Ingresar</Button>
+                            <GoogleLogin
+                                buttonText="Ingresar con Google"
+                                clientId={clientId}
+                                onSuccess={ingresarConGoogle}
+                                cookiePolicy="single_host_policy"
+                            />
                             <p className="text-sm">Aún no tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(false)} >Registrate</span></p>
                             {/* <Button onClick={() => setLogin(false)}>Aún no tengo cuenta</Button> */}
                         </DialogContent>) : <DialogContent>
@@ -418,6 +473,12 @@ const NavBar = () => {
                                 <Input value={form?.password2} onChange={handleForm} name="password2" placeholder="Repite tu contraseña" type="password" />
                             </div>
                             <Button className="" onClick={registroUsuario}>Registrarme</Button>
+                            <GoogleLogin
+                                buttonText="Registrarme con Google"
+                                clientId={clientId}
+                                onSuccess={registrarConGoogle}
+                                cookiePolicy="single_host_policy"
+                            />
                             <p className="text-sm">Ya tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(true)} >Ingresa</span></p>
                             {/* <Button onClick={() => setLogin(true)}>Ya tengo cuenta</Button> */}
                         </DialogContent>}

@@ -109,7 +109,10 @@ const SorteoDetail = () => {
             redirectUrl: `https://rifavo.com/sorteo/${id}`,
             publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
             // redirectUrl: `http://localhost:5173/sorteo/${id}`,
-            signature: { integrity: hashHex }
+            signature: { integrity: hashHex },
+            paymentMethods: {
+                exclude: ['BANCOLOMBIA_CORRESPONSAL'] // Excluyendo el método de corresponsal bancario
+              }
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
