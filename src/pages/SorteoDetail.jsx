@@ -42,7 +42,7 @@ const SorteoDetail = () => {
     useEffect(() => {
         if (queryId && usuario) {
             // axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
-                axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+            axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
                 if (data.data.status == "APPROVED") {
                     const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
                     if (numerosComprados) {
@@ -109,10 +109,7 @@ const SorteoDetail = () => {
             redirectUrl: `https://rifavo.com/sorteo/${id}`,
             publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
             // redirectUrl: `http://localhost:5173/sorteo/${id}`,
-            signature: { integrity: hashHex },
-            paymentMethods: {
-                exclude: ['BANCOLOMBIA_CORRESPONSAL'] // Excluyendo el método de corresponsal bancario
-              }
+            signature: { integrity: hashHex }
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
@@ -138,28 +135,28 @@ const SorteoDetail = () => {
     };
 
     const registroRapido = async () => {
-        if(!invitado.name?.length || !invitado.lastname?.length || !invitado.phone?.length || !invitado.email?.length) return toast({
-            variant:"destructive",
+        if (!invitado.name?.length || !invitado.lastname?.length || !invitado.phone?.length || !invitado.email?.length) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes rellenar todos los campos para poder registrarte",
         })
-        if(invitado.name.length < 3) return toast({
-            variant:"destructive",
+        if (invitado.name.length < 3) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "El nombre debe tener más de 3 caracteres",
         })
-        if(invitado.lastname.length < 3) return toast({
-            variant:"destructive",
+        if (invitado.lastname.length < 3) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "El apellido debe tener más de 3 caracteres",
         })
-        if(invitado.phone.length != 10) return toast({
-            variant:"destructive",
+        if (invitado.phone.length != 10) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes ingresar un numero de telefono válido, ejemplo: 3201234567",
         })
-        if(!regexMail.test(invitado.email)) return toast({
-            variant:"destructive",
+        if (!regexMail.test(invitado.email)) return toast({
+            variant: "destructive",
             title: "Campos incompletos",
             description: "Debes ingresar un correo electrónico válido",
         })
@@ -209,7 +206,7 @@ const SorteoDetail = () => {
         axios.post("/user/auth", form).then(({ data }) => {
             setUsuario(data.user)
             localStorage.setItem("token", data.token)
-        },(e) => toast({
+        }, (e) => toast({
             variant: "destructive",
             title: "Ha ocurrido un error",
             description: e.response.data,
