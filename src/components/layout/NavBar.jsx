@@ -45,7 +45,6 @@ import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import { toast } from "../ui/use-toast"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import ReciboDePago from "../../pages/plantillas/reciboDePago"
-
 import GoogleLogin from "react-google-login"
 import { gapi } from "gapi-script"
 
