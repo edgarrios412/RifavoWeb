@@ -2,6 +2,7 @@ import useCountdown from "use-simple-countdown"
 import { useEffect, useState } from "react"
 import Rifavo from "@/components/icons/branding/Rifavo"
 import { Facebook, Instagram } from "lucide-react"
+import RifavoLight from "@/components/icons/branding/RifavoLight"
 
 const Apertura = () => {
     const [s, m, h, d] = useCountdown(new Date(2024, 6, 1))
@@ -12,8 +13,13 @@ const Apertura = () => {
             <div class="orange-blur2 invisible lg:visible"></div>
             {/* <div class="orange-blur3"></div> */}
             <div className="flex flex-col justify-center px-8 sm:px-0 py-4 w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[40%]">
-                <div className="w-72 sm:w-96 my-10">
+                <div className="relative">
+                <div className="absolute visible dark:invisible w-72 sm:w-96 my-10">
                     <Rifavo />
+                </div>
+                <div className="invisible dark:visible w-72 sm:w-96 my-10">
+                    <RifavoLight />
+                </div>
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-bold">Llegaremos muy pronto</h1>
                 <p className="mt-4 text text-slate-500 text-normal sm:text-lg">Queremos que tengas una buena experiencia usando nuestra plataforma así que estamos haciendo lo mejor para tener una plataforma que puedas usar facilmente</p>

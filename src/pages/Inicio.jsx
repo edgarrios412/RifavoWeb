@@ -8,7 +8,7 @@ import moto from "/moto.jpg"
 import moto2 from "/moto2.png"
 import moto3 from "/moto3.png"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownToLine, BookUser, Bot, Brain, BrainCircuit, Brush, CalendarDays, Database, Dices, Fingerprint, Folder, Gift, HelpCircle, Linkedin, Mail, Search, Server, Ticket, TicketCheck } from "lucide-react";
+import { ArrowDownToLine, BookUser, Bot, Brain, BrainCircuit, Brush, CalendarDays, CheckCircle2, Database, Dices, Fingerprint, Folder, Gift, HelpCircle, Linkedin, Mail, Search, Server, Ticket, TicketCheck } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Lottie from 'lottie-react';
 import ani1 from '../../public/animations/1.json';
@@ -47,12 +47,12 @@ const Inicio = () => {
                         {/* <h4 className="mb-4 font-bold">Participa y gana</h4> */}
                         {/* <h1 className="text-[60px] tracking-widest">PORTFOLIO</h1> */}
                         <h1 className="text-[35px] sm:text-[45px] lg:text-[65px] max-w-[40rem] leading-none font-extrabold">Conviertete en un feliz <span className="font-extrabold bg-gradient-to-r from-orange-500 to-red-500 inline-block text-transparent bg-clip-text">GANADOR</span></h1>
-                        <p className="max-w-[30rem] my-4 text-slate-600 text-lg">Participa en nuestros sorteos y gana increibles premios <b>¿Que esperas para probar tu suerte?</b></p>
-                        <div className="flex items-center gap-3 bg-slate-100 border-l-4 border-l-orange-400 rounded-r-sm pl-4 py-3">
+                        <p className="max-w-[30rem] my-4 text-slate-600 dark:text-slate-300 text-lg">Participa en nuestros sorteos y gana increibles premios <b>¿Que esperas para probar tu suerte?</b></p>
+                        <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#262635] border-l-4 border-l-orange-400 rounded-r-sm pl-4 py-3">
                             <Gift className="w-8 h-8" />
                             <div>
                                 <p className="font-bold">¡Estás de suerte!</p>
-                                <p className="text-slate-500">Tenemos {sorteos?.length} sorteos activos</p>
+                                <p className="text-slate-500 dark:text-slate-400">Tenemos {sorteos?.length} sorteos activos</p>
                             </div>
 
                         </div>
@@ -79,24 +79,24 @@ const Inicio = () => {
                         animate={{ x: 0 }} className="text-end w-full px-5 sm:px-20 lg:px-0 lg:w-1/3">
                         <h1 className="text-[30px] sm:text-[40px] lg:text-[50px] lg:text-end text-center font-bold mb-6">Participar es muy sencillo</h1>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5 h-96">
-                            <div className="flex justify-end items-center gap-5 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
+                            <div className="flex justify-end items-center gap-5 bg-slate-100 dark:bg-[#262635] border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Registrate</p>
-                                    <p className="text-slate-500">Para que podamos diferenciarte entre los demás debes registrarte e ingresar</p>
+                                    <p className="text-slate-500 dark:text-slate-400">Para que podamos diferenciarte entre los demás debes registrarte e ingresar</p>
                                 </div>
                                 <Fingerprint className="w-8 h-8 sm:block hidden" />
                             </div>
-                            <div className="flex justify-end items-center gap-3 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
+                            <div className="flex justify-end items-center gap-3 bg-slate-100 dark:bg-[#262635] border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Compra tus tickets</p>
-                                    <p className="text-slate-500">Adquiere tantos tickets como quieras, mientras más tickets más posibilidad de ganar</p>
+                                    <p className="text-slate-500 dark:text-slate-400">Adquiere tantos tickets como quieras, mientras más tickets más posibilidad de ganar</p>
                                 </div>
                                 <Ticket className="w-8 h-8 sm:block hidden" />
                             </div>
-                            <div className="flex justify-end items-center gap-3 bg-slate-100 border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
+                            <div className="flex justify-end items-center gap-3 bg-slate-100 dark:bg-[#262635] border-r-4 border-r-orange-400 rounded-l-sm pr-4 py-3">
                                 <div>
                                     <p className="font-bold text-lg">Espera los resultados</p>
-                                    <p className="text-slate-500">Cuando el temporizador del sorteo llegue a 0 se anunciará el ganador!</p>
+                                    <p className="text-slate-500 dark:text-slate-400">Cuando el temporizador del sorteo llegue a 0 se anunciará el ganador!</p>
                                 </div>
                                 <Dices className="w-8 h-8 sm:block hidden" />
                             </div>
@@ -110,19 +110,19 @@ const Inicio = () => {
                         </motion.div>
                     </motion.div>
                 </div>
-                <div id="sorteos" className="text-center flex items-center justify-evenly min-h-[100vh] h-fit bg-slate-50 mt-40 py-20">
+                <div id="sorteos" className="text-center flex items-center justify-evenly min-h-[100vh] h-fit bg-slate-50 dark:bg-[#14141A] mt-40 py-20">
                     <div>
                         <h1 className="text-[35px] sm:text-[45px] lg:text-[60px] mb-20 font-extrabold">Sorteos activos</h1>
                         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-20">
-                            {sorteos.map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white shadow-slate-200 pb-4">
+                            {sorteos.map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
                                     <img src={s.image[0]} className="rounded-lg px-10 py-4" />
                                     <div className="text-left px-6">
                                     <h2 className="font-bold text-lg my-2">{s.premio1}</h2>
                                     <p className="text-slate-500 mb-2">{s.mindesc}</p>
                                     <div className="items-center justify-between my-4">
-                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1" />
+                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1 bg-red-500" />
                                     {s.cantidadTicket*0.6 > s.tickets.length ? <p className="text-sm text-slate-500">Faltan <b>{(s.cantidadTicket*0.6)-s.tickets.length}</b> tickets para iniciar</p>
-                                    :<p className="text-sm text-slate-500">Sorteo listo para empezar!</p>}
+                                    :<p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4"/> Sorteo listo para empezar!</p>}
                                     </div>
                                     <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>{Number(s.precioTicket).toLocaleString()} COP</p>
                                     {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/>{s.fechaSorteo} 10:40PM</p> :<p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>}

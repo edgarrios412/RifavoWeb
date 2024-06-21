@@ -10,7 +10,7 @@ import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
 import ani1 from '../../public/animations/empty.json';
 import winner from '../../public/animations/winner.json';
-import { CalendarDays, ChevronLeft, CreditCard, Ticket, Trophy } from "lucide-react"
+import { CalendarDays, CheckCircle2, ChevronLeft, CreditCard, Ticket, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Lottie from "lottie-react"
@@ -280,7 +280,7 @@ const SorteoDetail = () => {
                     <div className="items-center justify-between my-4">
                         <Progress value={(sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6) > 100 ? 100 : (sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6)} className="w-[60%] mb-1" />
                         {sorteo?.cantidadTicket * 0.6 > sorteo?.tickets?.length ? <p className="text-sm text-slate-500">Faltan <b>{(sorteo.cantidadTicket * 0.6) - sorteo.tickets.length}</b> tickets para iniciar</p>
-                            : <p className="text-sm text-slate-500">Sorteo listo para empezar!</p>}
+                            : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4"/>Sorteo listo para empezar!</p>}
                     </div>
                     <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />{Number(sorteo.precioTicket).toLocaleString()} COP</p>
                     {sorteo.fechaSorteo ? <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" />{sorteo.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" /> Se iniciará al vender los tickets</p>}
@@ -291,10 +291,10 @@ const SorteoDetail = () => {
                 </div>
             </div>
             {/* PREMIOS */}
-            <div className="text-start flex items-center justify-center bg-slate-50 py-6 flex-col">
+            <div className="text-start flex items-center justify-center bg-slate-50 dark:bg-[#14141A] py-6 flex-col">
                 <h2 className="text-[35px] sm:text-[45px] lg:text-[60px] mb-6 font-extrabold">Premios</h2>
                 <div className="flex flex-col lg:flex-row items-stretch justify-center gap-20">
-                    <div className="flex flex-col justify-between max-w-56 bg-white rounded-lg p-4 shadow-md hover:border-yellow-500 border border-transparent transition cursor-pointer">
+                    <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-500 border border-transparent transition cursor-pointer">
                         <div>
                             <p className="font-extrabold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 ¡Premio Mayor!
@@ -308,7 +308,7 @@ const SorteoDetail = () => {
                             {sorteo.numTicketGanadorP1 && <p className="text-lg font-bold flex items-center mt-2 gap-2"><Trophy color="orange" className="w-5 h-5" />{sorteo.numTicketGanadorP1}</p>}
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between max-w-56 bg-white rounded-lg p-4 shadow-md hover:border-gray-500 border border-transparent cursor-pointer transition">
+                    <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-gray-500 border border-transparent cursor-pointer transition">
                         <div>
                             <p className="font-extrabold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Segundo premio
@@ -322,7 +322,7 @@ const SorteoDetail = () => {
                             {sorteo.numTicketGanadorP2 && <p className="text-lg font-bold flex items-center mt-2 gap-2"><Trophy color="gray" className="w-5 h-5" />{sorteo.numTicketGanadorP2}</p>}
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between max-w-56 bg-white rounded-lg p-4 shadow-md hover:border-yellow-900 border border-transparent cursor-pointer transition">
+                    <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-900 border border-transparent cursor-pointer transition">
                         <div>
                             <p className="font-extrabold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Tercer premio
@@ -355,7 +355,7 @@ const SorteoDetail = () => {
                     <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-10 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">
                         {filteredNumeros.map((index) => {
                             if (!numerosComprados.includes(index)) {
-                                return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-14 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
+                                return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
                                     {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
                                 </p>)
                             } else {

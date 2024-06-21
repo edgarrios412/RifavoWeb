@@ -47,6 +47,8 @@ import { PDFDownloadLink } from "@react-pdf/renderer"
 import ReciboDePago from "../../pages/plantillas/ReciboDePago"
 import GoogleLogin from "react-google-login"
 import { gapi } from "gapi-script"
+import { ModeToggle } from "../mode-toggle"
+import RifavoLight from "../icons/branding/RifavoLight"
 
 const NavBar = () => {
 
@@ -359,12 +361,20 @@ const NavBar = () => {
                         </div></>}
                 </DialogContent>
             </Dialog>
-            <div className="fixed w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white bg-opacity-95 z-10">
-                <a href="/">
-                    <div className="h-full w-32 sm:w-40 flex items-center">
-                        <Rifavo />
+            <div className="fixed w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
+                <div className="relative flex">
+                    <a href="/" className="relative">
+                        <div className="absolute invisible sm:visible dark:invisible h-full w-32 sm:w-40 flex items-center">
+                            <Rifavo />
+                        </div>
+                        <div className="absolute invisible sm:dark:visible h-full w-32 sm:w-40 flex items-center">
+                            <RifavoLight />
+                        </div>
+                    </a>
+                    <div className="sm:relative sm:left-52">
+                    <ModeToggle />
                     </div>
-                </a>
+                </div>
                 {usuario ?
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -405,7 +415,7 @@ const NavBar = () => {
                         </DropdownMenuContent>
                     </DropdownMenu> : <Dialog>
                         <DialogTrigger>
-                            <Button className="bg-gradient-to-r from-orange-500 to-red-500">Ingresa ahora</Button>
+                            <Button className="bg-gradient-to-r dark:text-white color-white from-orange-500 to-red-500">Ingresa ahora</Button>
                         </DialogTrigger>
                         {login ? (recovery ? <DialogContent>
                             <DialogHeader>

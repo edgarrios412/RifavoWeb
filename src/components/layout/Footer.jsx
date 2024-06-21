@@ -2,32 +2,49 @@ import { Copyright, Facebook, Instagram, Twitter } from "lucide-react"
 import Rifavo from "../icons/branding/Rifavo"
 import { DialogHeader, DialogTitle, DialogContent, Dialog } from "../ui/dialog"
 import { useState } from "react"
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+  } from "../ui/accordion"
+import RifavoLight from "../icons/branding/RifavoLight"
 
 const Footer = () => {
 
     const [dialog, setDialog] = useState(false)
-    const [somos, setSomos] = useState(false)
-    const [premios, setPremios] = useState(false)
+    // const [somos, setSomos] = useState(false)
+    // const [premios, setPremios] = useState(false)
     const [politicas, setPoliticas] = useState(false)
 
     return (
         <>
-            <Dialog open={somos} onOpenChange={setSomos}>
+            {/* <Dialog open={somos} onOpenChange={setSomos}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>¿Quienes somos?</DialogTitle>
                     </DialogHeader>
                     <p className="text-muted-foreground">Apartado en construcción estará disponible en breve</p>
                 </DialogContent>
-            </Dialog>
-            <Dialog open={premios} onOpenChange={setPremios}>
+            </Dialog> */}
+            {/* <Dialog open={premios} onOpenChange={setPremios}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Reclamar premios</DialogTitle>
                     </DialogHeader>
                     <p className="text-muted-foreground">Apartado en construcción estará disponible en breve</p>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
             <Dialog open={politicas} onOpenChange={setPoliticas}>
                 <DialogContent>
                     <DialogHeader>
@@ -46,11 +63,14 @@ const Footer = () => {
             </Dialog>
             <footer>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-20 justify-center px-20 py-10 mx-auto">
-                    <a href="/">
-                        <div className="h-full w-32 sm:w-40 flex items-center">
-                            <Rifavo />
-                        </div>
-                    </a>
+                <a href="/" className="relative">
+                    <div className="absolute visible dark:invisible h-full w-32 sm:w-40 flex items-center">
+                        <Rifavo />
+                    </div>
+                    <div className="absolute invisible dark:visible h-full w-32 sm:w-40 flex items-center">
+                        <RifavoLight />
+                    </div>
+                </a>
                     <div className="">
                         <p className="font-bold">Redes sociales</p>
                         <div className="flex gap-5 mt-3">
@@ -64,19 +84,71 @@ const Footer = () => {
                             <Twitter />
                         </a> */}
                         </div>
-                        <p className="text-slate-500 text-sm mt-4 w-56">Subimos noticias y cosas importantes en la paltaforma en nuestras redes sociales</p>
+                        <p className="text-slate-500 text-sm mt-4 w-56">Subimos noticias y cosas importantes de la plataforma en nuestras redes sociales</p>
                     </div>
                     <div>
                         <p className="font-bold">Información</p>
                         <div className="flex flex-col gap-4 mt-3">
-                            <a target="_blank">
-                                <p onClick={() => setSomos(true)} className="hover:underline cursor-pointer text-slate-700">¿Quienes somos?</p>
-                            </a>
-                            <a target="_blank">
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <a target="_blank">
+                                        <p className="hover:underline cursor-pointer text-slate-700 dark:text-slate-400">Preguntas frecuentes</p>
+                                    </a>
+                                </SheetTrigger>
+                                <SheetContent>
+                                    <SheetHeader>
+                                        <SheetTitle>Preguntas frecuentes</SheetTitle>
+                                        <SheetDescription>
+                                            Antes de contactarnos asegurate de que tu pregunta no se encuentre en éste apartado
+                                        </SheetDescription>
+                                        <Accordion type="multiple" collapsible className="w-full">
+                                            <AccordionItem value="item-1">
+                                                <AccordionTrigger className="font-bold hover:no-underline">¿Como puedo participar?</AccordionTrigger>
+                                                <AccordionContent>
+                                                    Para participar debes ingresar al sorteo que más te guste, seleccionar los numeros que desees comprar
+                                                    luego rellena tus datos o inicia sesión en tu cuenta, coloca el método de pago y realiza el pago
+                                                    y listo, ya estarás participando en el sorteo.
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                            <AccordionItem value="item-2">
+                                                <AccordionTrigger className="font-bold hover:no-underline">¿Como puedo reclamar mi premio?</AccordionTrigger>
+                                                <AccordionContent>
+                                                    Si ganas un sorteo te llegará un correo electrónico avisandote que has ganado, el correo puede demorar hasta 24 horas en llegarte, pero llegará,
+                                                    una vez recibas el correo el siguiente dia hábil el equipo de Rifavo se pondrá en contacto contigo para entregarte el premio.
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                            <AccordionItem value="item-3">
+                                                <AccordionTrigger className="font-bold hover:no-underline">Como sé que recibiré mi premio si gano</AccordionTrigger>
+                                                <AccordionContent>
+                                                    Puedes tener confianza en nosotros, en nuestras redes sociales anunciamos siempre los ganadores y se puede corroborar que son personas reales.
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                            <AccordionItem value="item-4">
+                                                <AccordionTrigger className="font-bold hover:no-underline">¿Cuales son los metodos de pago?</AccordionTrigger>
+                                                <AccordionContent>
+                                                    En estos momentos sólo estamos trabajando con WOMPI, que es un servicio de Bancolombia para pagos electrónicos, se puede pagar con Nequi, PSE hasta tarjetas de créditos o débitos,
+                                                    proximamente estaremos agregando más metodos de pagos!
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                            <AccordionItem value="item-5">
+                                                <AccordionTrigger className="font-bold hover:no-underline">¿Cuando iniciará el sorteo?</AccordionTrigger>
+                                                <AccordionContent>
+                                                    Los sorteos se inician una vez se vende el 65% de los tickets disponibles, una vez vendidos se asignará la fecha del sorteo, por lo general siempre
+                                                    es el primer sábado transcurridas 6 semanas.
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        </Accordion>
+                                    </SheetHeader>
+                                    <div className="grid gap-4 py-4">
+
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                            {/* <a target="_blank">
                                 <p onClick={() => setPremios(true)} className="hover:underline cursor-pointer text-slate-700">Reclamar premios</p>
-                            </a>
+                            </a> */}
                             <a target="_blank">
-                                <p onClick={() => setPoliticas(true)} className="hover:underline cursor-pointer text-slate-700">Politicas</p>
+                                <p onClick={() => setPoliticas(true)} className="hover:underline cursor-pointer text-slate-700 dark:text-slate-400">Politicas</p>
                             </a>
                         </div>
                     </div>
@@ -84,13 +156,13 @@ const Footer = () => {
                         <p className="font-bold">Soporte</p>
                         <div className="flex flex-col gap-4 mt-3">
                             <a target="_blank">
-                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 cursor-pointer">Contactanos</p>
+                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 dark:text-slate-400 cursor-pointer">Contactanos</p>
                             </a>
                             <a target="_blank">
-                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 cursor-pointer">Necesito ayuda</p>
+                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 dark:text-slate-400 cursor-pointer">Necesito ayuda</p>
                             </a>
                             <a target="_blank">
-                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 cursor-pointer">Reportar error</p>
+                                <p onClick={() => setDialog(true)} className="hover:underline text-slate-700 dark:text-slate-400 cursor-pointer">Reportar error</p>
                             </a>
                         </div>
                     </div>
