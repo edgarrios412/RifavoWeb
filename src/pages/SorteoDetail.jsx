@@ -105,11 +105,12 @@ const SorteoDetail = () => {
             currency: "COP",
             amountInCents: monto + "00",
             reference: reference,
-            // publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
             redirectUrl: `https://rifavo.com/sorteo/${id}`,
-            publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
+            paymentMethods: ['CARD', 'NEQUI'],
+            // publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
             // redirectUrl: `http://localhost:5173/sorteo/${id}`,
-            signature: { integrity: hashHex }
+            // signature: { integrity: hashHex }
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
@@ -345,7 +346,7 @@ const SorteoDetail = () => {
                     <Input type="number" placeholder="Filtrar tus numeros favoritos" onChange={(e) => setFilter(e.target.value)} />
                     {
                         !filteredNumeros.length &&
-                        <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center min-w-[45rem]">
                             <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} />
                             <p key={1} className={`flex items-center justify-center text-center mx-auto mt-4 text-slate-500`}>
                                 No hemos conseguido el número que estás buscando

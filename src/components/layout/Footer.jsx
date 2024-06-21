@@ -1,6 +1,6 @@
-import { Copyright, Facebook, Instagram, Twitter } from "lucide-react"
+import { Copyright, Dot, Facebook, Instagram, Twitter } from "lucide-react"
 import Rifavo from "../icons/branding/Rifavo"
-import { DialogHeader, DialogTitle, DialogContent, Dialog } from "../ui/dialog"
+import { DialogHeader, DialogTitle, DialogContent, Dialog, DialogClose, DialogFooter } from "../ui/dialog"
 import { useState } from "react"
 import {
     Sheet,
@@ -17,8 +17,10 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-  } from "../ui/accordion"
+} from "../ui/accordion"
 import RifavoLight from "../icons/branding/RifavoLight"
+import { Separator } from "../ui/separator"
+import { Button } from "../ui/button"
 
 const Footer = () => {
 
@@ -46,11 +48,48 @@ const Footer = () => {
                 </DialogContent>
             </Dialog> */}
             <Dialog open={politicas} onOpenChange={setPoliticas}>
-                <DialogContent>
+                <DialogContent className="max-h-full overflow-y-scroll">
                     <DialogHeader>
-                        <DialogTitle>Politicas</DialogTitle>
+                        <DialogTitle>Políticas de Uso de RIFAVO</DialogTitle>
                     </DialogHeader>
-                    <p className="text-muted-foreground">Apartado en construcción estará disponible en breve</p>
+                    <b>1. Introducción</b>
+                    Bienvenido a RIFAVO, tu plataforma de sorteos y rifas en línea. Estas políticas de uso están diseñadas para garantizar una experiencia justa, segura y transparente para todos nuestros usuarios. Al utilizar nuestra plataforma, aceptas cumplir con estas políticas y cualquier actualización futura que realicemos.
+                    <b>2. Elegibilidad</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los usuarios deben tener al menos 18 años de edad para participar en los sorteos y rifas.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los usuarios deben proporcionar información veraz y actualizada durante el proceso de registro.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los empleados de RIFAVO y sus familiares directos no son elegibles para participar en los sorteos y rifas organizados por la plataforma.</p>
+                    <b>3. Proceso de Participación</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los sorteos y rifas organizados en RIFAVO pueden ser gratuitos o de pago.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Cada sorteo o rifa tiene sus propias reglas y condiciones, que se detallan en la página específica del evento.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los usuarios deben seguir todas las instrucciones proporcionadas para participar correctamente en cada sorteo o rifa.</p>
+                    <b>4. Premios</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los premios se entregarán tal como se describen en la página del sorteo o rifa.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />RIFAVO no es responsable de la calidad o funcionalidad de los premios proporcionados por terceros.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los ganadores serán notificados a través de los medios de contacto proporcionados durante el registro.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los premios no reclamados dentro del plazo especificado serán considerados perdidos y podrán ser reasignados a otro participante o utilizados en futuros sorteos.</p>
+                    <b>5. Política de Reembolso</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Las rifas y sorteos de pago no son reembolsables, a menos que se cancele el evento por parte de RIFAVO.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />En caso de cancelación, los usuarios recibirán un reembolso completo de su participación.</p>
+                    <b>6. Conducta del Usuario</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Los usuarios deben comportarse de manera respetuosa y no deben realizar actividades fraudulentas, engañosas o perjudiciales.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />El uso de bots, scripts u otros métodos automatizados para participar en los sorteos y rifas está estrictamente prohibido.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Cualquier comportamiento inapropiado resultará en la suspensión o eliminación de la cuenta del usuario.</p>
+                    <b>7. Privacidad</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />RIFAVO se compromete a proteger la privacidad de sus usuarios. La información personal proporcionada durante el registro y la participación en sorteos será utilizada únicamente para los fines específicos de la plataforma.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Para más detalles, consulta nuestra Política de Privacidad.</p>
+                    <b>8. Modificaciones y Actualizaciones</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />RIFAVO se reserva el derecho de modificar estas políticas en cualquier momento. Las modificaciones serán efectivas a partir de su publicación en nuestra plataforma.</p>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Se recomienda a los usuarios revisar periódicamente estas políticas para estar al tanto de cualquier cambio.</p>
+                    <b>9. Contacto</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Para cualquier pregunta o inquietud sobre estas políticas, puedes contactarnos a través de nuestro soporte al cliente en atencionalcliente@gmail.com o visitar la sección de ayuda en nuestra plataforma.</p>
+                    <b>10. Ley Aplicable</b>
+                    <p className="flex gap-2"><Dot className="min-w-6 min-h-6" />Estas políticas están sujetas a las leyes vigentes en Colombia. Cualquier disputa relacionada con el uso de nuestra plataforma será resuelta bajo la jurisdicción de los tribunales competentes en Colombia.</p>
+                    <Separator />
+                    Al utilizar RIFAVO, aceptas estas políticas de uso. Gracias por ser parte de nuestra comunidad de sorteos y rifas. ¡Buena suerte en tu próxima participación!
+                    <Separator />
+                    <DialogFooter>
+                        <Button onClick={() => setPoliticas(false)}>Cerrar</Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
             <Dialog open={dialog} onOpenChange={setDialog}>
@@ -63,14 +102,14 @@ const Footer = () => {
             </Dialog>
             <footer>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-20 justify-center px-20 py-10 mx-auto">
-                <a href="/" className="relative">
-                    <div className="absolute visible dark:invisible h-full w-32 sm:w-40 flex items-center">
-                        <Rifavo />
-                    </div>
-                    <div className="absolute invisible dark:visible h-full w-32 sm:w-40 flex items-center">
-                        <RifavoLight />
-                    </div>
-                </a>
+                    <a href="/" className="relative">
+                        <div className="absolute visible dark:invisible h-full w-32 sm:w-40 flex items-center">
+                            <Rifavo />
+                        </div>
+                        <div className="absolute invisible dark:visible h-full w-32 sm:w-40 flex items-center">
+                            <RifavoLight />
+                        </div>
+                    </a>
                     <div className="">
                         <p className="font-bold">Redes sociales</p>
                         <div className="flex gap-5 mt-3">
