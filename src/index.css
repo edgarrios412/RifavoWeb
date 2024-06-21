@@ -15,6 +15,32 @@
   background-size: 200% 200%;
 }
 
+.orange-blur {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: #FFA500;
+  filter: blur(150px);
+  opacity: 0.4;
+  top: 30%;
+  left: 95%;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Asegurarse de que esté detrás del contenido */
+}
+
+.orange-blur2 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: #FFA500;
+  filter: blur(150px);
+  opacity: 0.4;
+  top: 70%;
+  left: 5%;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Asegurarse de que esté detrás del contenido */
+}
+
 @font-face {
   font-family: 'GeistSans';
   src: url('/fonts/GeistVF.woff2') format('woff2'),
