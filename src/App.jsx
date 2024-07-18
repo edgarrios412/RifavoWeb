@@ -19,13 +19,14 @@ function App() {
 
   return (
     <>
-      {location.pathname != "/" && <NavBar />}
+      <NavBar />
       <Routes>
-        <Route path="/" element={<Apertura />} />
+        <Route path="/" element={<Inicio />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/sorteo/:id" element={<SorteoDetail />} />
       </Routes>
-      {location.pathname != "/" && <Footer />}
+      <Footer/>
+      {/* {location.pathname != "/" && <Footer />} */}
     </>
   );
 }
