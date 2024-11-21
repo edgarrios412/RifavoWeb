@@ -11,7 +11,7 @@ export const UserProvider = ({children}) => {
         const token = localStorage.getItem("token")
         if(!token) return setUsuario(null)
         axios.get("/user/token/"+token)
-        .then(({data}) => setUsuario(data))
+        .then(({data}) => setUsuario(data),() => setUsuario(null))
     }
 
     return (

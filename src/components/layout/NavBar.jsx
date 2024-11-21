@@ -36,7 +36,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ArrowDownToLine, CalendarDays, History, LogOut, QrCode, Ticket, Trophy, User } from "lucide-react"
+import { ArrowDownToLine, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, User } from "lucide-react"
 import { DownloadTableExcel } from "react-export-table-to-excel"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
@@ -45,14 +45,41 @@ import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import { toast } from "../ui/use-toast"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import ReciboDePago from "../../pages/plantillas/ReciboDePago"
-import GoogleLogin from "react-google-login"
+// import GoogleLogin from "react-google-login"
 import { gapi } from "gapi-script"
 import { ModeToggle } from "../mode-toggle"
 import RifavoLight from "../icons/branding/RifavoLight"
+import { useNavigate } from "react-router-dom"
+import QRCode from "react-qr-code"
+import { toDataURL } from "qrcode"
+import { pdf } from '@react-pdf/renderer';
 
 const NavBar = () => {
-
+    const [qrCodes, setQrCodes] = useState({});
     const clientId = "934325083803-p97gi9ef7ckittt88mep8egc5rpfttkb.apps.googleusercontent.com"
+
+    const generateQRCode = async (ticketId) => {
+        if (qrCodes[ticketId]) return qrCodes[ticketId]; // Si ya existe, retorna el Data URL
+        const qrDataURL = await toDataURL(ticketId.toString());
+        setQrCodes((prev) => ({ ...prev, [ticketId]: qrDataURL }));
+        return qrDataURL;
+    };
+
+    const handleDownloadPDF = async (ticket) => {
+        const qrCode = await generateQRCode(`https://rifavo.com/verificarTicket/${ticket.id}`);
+        const pdfDocument = <ReciboDePago ticket={ticket} qrCode={qrCode} />;
+
+        // Generar el Blob del PDF usando `pdf`
+        const pdfBlob = await pdf(pdfDocument).toBlob();
+
+        // Crear enlace de descarga
+        const downloadLink = document.createElement('a');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        downloadLink.href = pdfUrl;
+        downloadLink.download = `reciboTicket${ticket.id}.pdf`;
+        downloadLink.click();
+        URL.revokeObjectURL(pdfUrl);
+    };
 
     useEffect(() => {
         const start = () => {
@@ -71,6 +98,7 @@ const NavBar = () => {
     const [form, setForm] = useState({})
     const [ticketId, setTicketId] = useState("")
     const [ticket, setTicket] = useState(null)
+    const navigation = useNavigate()
 
     const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
@@ -281,11 +309,9 @@ const NavBar = () => {
                                     </TableCell> : <TableCell className="text-slate-500"><p>Aún no hay ganador</p></TableCell>}
                                     {/* <TableCell className="text-right">{Number(t.sorteo.precioTicket).toLocaleString()} COP</TableCell> */}
                                     <TableCell>
-                                        <PDFDownloadLink document={<ReciboDePago ticket={t} />} fileName={`reciboTicket${t.id}.pdf`}>
-                                            <Button>
-                                                <ArrowDownToLine className="w-4 h-4" />
-                                            </Button>
-                                        </PDFDownloadLink>
+                                        <Button onClick={() => handleDownloadPDF(t)}>
+                                            <ArrowDownToLine className="w-4 h-4" />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>)}
                             </TableBody>
@@ -325,7 +351,7 @@ const NavBar = () => {
                             <div className="flex items-center pt-2">
                                 <CalendarDays className="mr-1 h-4 w-4 opacity-70" />{" "}
                                 <span className="text-xs text-muted-foreground">
-                                    Se dio el ganador el{" "}04/12/24
+                                    {!ticket.sorteo.numTicketGanadorP1 ? `El sorteo se realizará el ${ticket.sorteo.fechaSorteo}` : `Se dio el ganador el ${ticket.sorteo.fechaSorteo}`}
                                 </span>
                             </div>
                             <div className="flex items-center pt-1">
@@ -363,7 +389,7 @@ const NavBar = () => {
             </Dialog>
             <div className="fixed w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
                 <div className="relative flex">
-                    <a href="/" className="relative">
+                    <a onClick={() => navigation("/")} className="relative">
                         <div className="absolute invisible sm:visible dark:invisible h-full w-32 sm:w-40 flex items-center">
                             <Rifavo />
                         </div>
@@ -372,7 +398,7 @@ const NavBar = () => {
                         </div>
                     </a>
                     <div className="sm:relative sm:left-52">
-                    <ModeToggle />
+                        <ModeToggle />
                     </div>
                 </div>
                 {usuario ?
@@ -406,6 +432,13 @@ const NavBar = () => {
                                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
+                            {usuario.role > 0 && <a onClick={() => navigation("/panel")}><DropdownMenuGroup>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <Cctv className="mr-2 h-4 w-4" />
+                                    <span>Administración </span>
+                                    {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup></a>}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => { setUsuario(null); localStorage.removeItem("token") }} className="cursor-pointer hover:!bg-red-200">
                                 <LogOut className="mr-2 h-4 w-4" />
@@ -443,12 +476,12 @@ const NavBar = () => {
                             </div>
                             <p onClick={() => setRecovery(true)} className="text-sm cursor-pointer hover:underline">Olvidé mi contraseña</p>
                             <Button className="" onClick={authenticate}>Ingresar</Button>
-                            <GoogleLogin
+                            {/* <GoogleLogin
                                 buttonText="Ingresar con Google"
                                 clientId={clientId}
                                 onSuccess={ingresarConGoogle}
                                 cookiePolicy="single_host_policy"
-                            />
+                            /> */}
                             <p className="text-sm">Aún no tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(false)} >Registrate</span></p>
                             {/* <Button onClick={() => setLogin(false)}>Aún no tengo cuenta</Button> */}
                         </DialogContent>) : <DialogContent>
@@ -482,12 +515,12 @@ const NavBar = () => {
                                 <Input value={form?.password2} onChange={handleForm} name="password2" placeholder="Repite tu contraseña" type="password" />
                             </div>
                             <Button className="" onClick={registroUsuario}>Registrarme</Button>
-                            <GoogleLogin
+                            {/* <GoogleLogin
                                 buttonText="Registrarme con Google"
                                 clientId={clientId}
                                 onSuccess={registrarConGoogle}
                                 cookiePolicy="single_host_policy"
-                            />
+                            /> */}
                             <p className="text-sm">Ya tienes una cuenta? <span className="hover:underline cursor-pointer" onClick={() => setLogin(true)} >Ingresa</span></p>
                             {/* <Button onClick={() => setLogin(true)}>Ya tengo cuenta</Button> */}
                         </DialogContent>}

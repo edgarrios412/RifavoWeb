@@ -28,6 +28,18 @@
   z-index: -1; /* Asegurarse de que esté detrás del contenido */
 }
 
+.mujer {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  filter: blur(150px);
+  opacity: 0.4;
+  top: 30%;
+  left: 95%;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Asegurarse de que esté detrás del contenido */
+}
+
 .orange-blur2 {
   position: absolute;
   width: 400px;

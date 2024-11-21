@@ -120,7 +120,7 @@ const Inicio = () => {
                                     <h2 className="font-bold text-lg my-2">{s.premio1}</h2>
                                     <p className="text-slate-500 mb-2">{s.mindesc}</p>
                                     <div className="items-center justify-between my-4">
-                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1 bg-red-500" />
+                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1 bg-gray-100 dark:bg-gray-600" />
                                     {s.cantidadTicket*0.6 > s.tickets.length ? <p className="text-sm text-slate-500">Faltan <b>{(s.cantidadTicket*0.6)-s.tickets.length}</b> tickets para iniciar</p>
                                     :<p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4"/> Sorteo listo para empezar!</p>}
                                     </div>

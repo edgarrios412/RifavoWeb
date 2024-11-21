@@ -41,8 +41,8 @@ const SorteoDetail = () => {
 
     useEffect(() => {
         if (queryId && usuario) {
-            // axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
-            axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+            axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+                // axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
                 if (data.data.status == "APPROVED") {
                     const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
                     if (numerosComprados) {
@@ -87,36 +87,21 @@ const SorteoDetail = () => {
         );
     };
 
-    const pagarAhora = async () => {
+    const pagarAhora = () => {
         const monto = misNumeros.length * sorteo.precioTicket
-        // setNumerosComprados([...numerosComprados, ...misNumeros])
-        // setMisNumeros([])
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
-        var cadenaConcatenada = `${reference}${monto}00COPprod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp`;
-        console.log(cadenaConcatenada)
-        //Ejemplo
-        const encondedText = new TextEncoder().encode(cadenaConcatenada);
-        const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-        console.log(hashHex)
+        // const cadenaConcatenada = `N2D3SZ9PNU5D${monto}00COPprod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp`;
         var checkout = new WidgetCheckout({
-            currency: "COP",
-            amountInCents: monto + "00",
-            reference: reference,
-            publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
-            redirectUrl: `https://rifavo.com/sorteo/${id}`,
-            paymentMethods: ['CARD', 'NEQUI'],
-            // publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
-            // redirectUrl: `http://localhost:5173/sorteo/${id}`,
-            // signature: { integrity: hashHex }
+            currency: 'COP',
+            publicKey:"pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            amountInCents:10000,
+            reference:"xdasdasd"
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
-            console.log(result)
+            console.log("Checkout Open: ", result)
             if (transaction.status == "APPROVED") {
-                // SI TODO SALE BIEN ¿QUE HAGO?
                 axios.post("/sorteo/comprar/tickets", { tickets: misNumeros, sorteoId: id, userId: usuario.id })
                     .then(({ data }) => {
                         toast({
@@ -125,7 +110,6 @@ const SorteoDetail = () => {
                         }); axios.get(`/sorteo/listar/${id}`).then(({ data }) => { setSorteo(data); setMisNumeros([]); setNumerosComprados(data.tickets.map(t => t.numero)) })
                     })
             } else {
-                // SI TODO SALE MAL QUE HAGO
                 toast({
                     variant: "destructive",
                     title: "Ha ocurrido un error",
@@ -281,7 +265,7 @@ const SorteoDetail = () => {
                     <div className="items-center justify-between my-4">
                         <Progress value={(sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6) > 100 ? 100 : (sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6)} className="w-[60%] mb-1" />
                         {sorteo?.cantidadTicket * 0.6 > sorteo?.tickets?.length ? <p className="text-sm text-slate-500">Faltan <b>{(sorteo.cantidadTicket * 0.6) - sorteo.tickets.length}</b> tickets para iniciar</p>
-                            : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4"/>Sorteo listo para empezar!</p>}
+                            : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4" />Sorteo listo para empezar!</p>}
                     </div>
                     <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />{Number(sorteo.precioTicket).toLocaleString()} COP</p>
                     {sorteo.fechaSorteo ? <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" />{sorteo.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" /> Se iniciará al vender los tickets</p>}
@@ -452,6 +436,18 @@ const SorteoDetail = () => {
                                 <img onClick={() => setPaymentMethod(1)} src="https://wompi.com/assets/img/metadatos/WompiLogo.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 1 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
                                 {/* <img onClick={() => setPaymentMethod(2)} src="https://d6jhcq8ww79ge.cloudfront.net/wp-content/uploads/2024/01/pay-blk-frame-v-copy-e1706628664480.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} /> */}
                             </div>
+                            <form action="https://checkout.wompi.co/p/" method="GET">
+  <input type="hidden" name="public-key" value="pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi" />
+  <input type="hidden" name="currency" value="COP" />
+  <input type="hidden" name="amount-in-cents" value="100000" />
+  <input type="hidden" name="reference" value="asdasdasd" />
+  {/* <input type="hidden" name="signature:integrity" value="FIRMA_DE_INTEGRIDAD" /> */}
+  {/* <button type="submit">Pagar con Wompi</button> */}
+  <Button className="w-full mt-5" type="submit">
+                                <CreditCard className="mx-2 w-5" />
+                                Pagar ahora
+                            </Button>
+</form>
                             <Button className="w-full mt-5" onClick={procesarPago}>
                                 <CreditCard className="mx-2 w-5" />
                                 Pagar ahora

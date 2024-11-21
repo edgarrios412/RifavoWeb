@@ -3,14 +3,18 @@ import { useEffect, useState } from "react"
 import Rifavo from "@/components/icons/branding/Rifavo"
 import { Facebook, Instagram } from "lucide-react"
 import RifavoLight from "@/components/icons/branding/RifavoLight"
+import mujer from "../assets/mujer.png"
 
 const Apertura = () => {
-    const [s, m, h, d] = useCountdown(new Date(2024, 6, 1))
+    const [s, m, h, d] = useCountdown(new Date(2024, 10, 22))
 
     return (
-        <div className="flex items-center justify-center sm:h-[100vh] overflow-x-hidden relative">
+        <div className="flex items-center justify-center sm:h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
             <div class="orange-blur"></div>
             <div class="orange-blur2 invisible lg:visible"></div>
+            <div className="absolute xl:w-[600px] lg:w-[500px] md:w-[400px] sm:w-[300px] bottom-0 xl:-right-40 lg:-right-60 invisible lg:visible z-1">
+                <img src={mujer}/>
+            </div>
             {/* <div class="orange-blur3"></div> */}
             <div className="flex flex-col justify-center px-8 sm:px-0 py-4 w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[40%]">
                 <div className="relative">
@@ -23,7 +27,7 @@ const Apertura = () => {
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-bold">Llegaremos muy pronto</h1>
                 <p className="mt-4 text text-slate-500 text-normal sm:text-lg">Queremos que tengas una buena experiencia usando nuestra plataforma así que estamos haciendo lo mejor para tener una plataforma que puedas usar facilmente</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-10 justify-items-center">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-10 justify-items-center z-10">
                     <div className="w-32 h-32 border border-slate-300 rounded-full flex flex-col items-center justify-center">
                         <p className="text-3xl">{d}</p>
                         <p className="text-muted-foreground">dias</p>
@@ -41,7 +45,7 @@ const Apertura = () => {
                         <p className="text-muted-foreground">segundos</p>
                     </div>
                 </div>
-                <div className="flex justify-between gap-5 mt-3">
+                <div className="flex justify-between gap-5 mt-3 z-10">
                     <p className="text-slate-500 text-sm sm:text-base">Mantente al tanto a través de nuestras redes sociales</p>
                     <div className="flex gap-5">
                         <a href="https://web.facebook.com/profile.php?id=61560852461961" target="_blank">
