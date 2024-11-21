@@ -23,8 +23,8 @@ function App() {
     <>
      {(location.pathname != "/") && <NavBar />}
       <Routes>
-        <Route path="/" element={<Apertura />} />
-        <Route path="/inicio" element={<Inicio />} />
+        {/* <Route path="/" element={<Apertura />} /> */}
+        <Route path="/" element={<Inicio />} />
         <Route path="/sorteo/:id" element={<SorteoDetail />} />
         <Route path="/panel" element={<Panel />} />
         <Route path="/verificarTicket/:id" element={<VerificarTicket />} />
