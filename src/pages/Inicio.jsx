@@ -33,12 +33,12 @@ const Inicio = () => {
 
     return (
         <>
-            <Dialog>
+            {/* <Dialog>
                 <DialogTrigger className="fixed bottom-5 right-5 lg:bottom-8 lg:right-8">
                     <Button className="bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-14 h-14 lg:h-16 lg:w-16"><Bot className="w-8 h-8" /></Button>
                 </DialogTrigger>
                 <BotAyudante />
-            </Dialog>
+            </Dialog> */}
             <div>
                 <div className="px-5 sm:px-20 lg:px-0 text-start flex flex-col-reverse pt-20 py-0 lg:py-64 lg:flex-row items-center justify-evenly min-h-[60vh]">
                     <motion.div initial={{ x: -100 }}
@@ -100,13 +100,13 @@ const Inicio = () => {
                                 </div>
                                 <Dices className="w-8 h-8 sm:block hidden" />
                             </div>
-                            <p className="text-slate-500 flex justify-end gap-1 items-center"><HelpCircle className="w-4 h-4" />Tienes más dudas?</p>
-                            <Dialog>
+                            {/* <p className="text-slate-500 flex justify-end gap-1 items-center"><HelpCircle className="w-4 h-4" />Tienes más dudas?</p> */}
+                            {/* <Dialog>
                                 <DialogTrigger className="flex justify-end">
                                     <Button className="bg-gradient-to-r from-orange-500 to-red-500"><Bot className="mr-4" />Habla con nuestro BOT</Button>
                                 </DialogTrigger>
                                 <BotAyudante />
-                            </Dialog>
+                            </Dialog> */}
                         </motion.div>
                     </motion.div>
                 </div>
