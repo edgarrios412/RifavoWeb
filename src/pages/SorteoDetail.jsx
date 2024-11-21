@@ -87,16 +87,23 @@ const SorteoDetail = () => {
         );
     };
 
-    const pagarAhora = () => {
-        const monto = misNumeros.length * sorteo.precioTicket
+    const pagarAhora = async () => {
+        const monto = misNumeros.length * sorteo.precioTicket * 100
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
-        // const cadenaConcatenada = `N2D3SZ9PNU5D${monto}00COPprod_integrity_992AIE1Zwrc2AOmPyYlB1Ajvvi2Aq7Qp`;
+        const cadenaConcatenada = `${reference}${monto}COPtest_integrity_Ui6u6C9xckxpbNnxfYBlnmaDUz8Z2orh`;
+        const encondedText = new TextEncoder().encode(cadenaConcatenada);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
         var checkout = new WidgetCheckout({
             currency: 'COP',
-            publicKey:"pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
-            amountInCents:10000,
-            reference:"xdasdasd"
+            publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            amountInCents: monto,
+            reference: reference,
+            signature: {integrity: hashHex},
+            redirectUrl: `http://localhost:5173/sorteo/${id}`
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
@@ -436,18 +443,6 @@ const SorteoDetail = () => {
                                 <img onClick={() => setPaymentMethod(1)} src="https://wompi.com/assets/img/metadatos/WompiLogo.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 1 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} />
                                 {/* <img onClick={() => setPaymentMethod(2)} src="https://d6jhcq8ww79ge.cloudfront.net/wp-content/uploads/2024/01/pay-blk-frame-v-copy-e1706628664480.png" className={`w-32 rounded-lg border border-transparent hover:grayscale-0 ${paymentMethod == 2 ? "grayscale-0" : "grayscale"} transition cursor-pointer`} /> */}
                             </div>
-                            <form action="https://checkout.wompi.co/p/" method="GET">
-  <input type="hidden" name="public-key" value="pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi" />
-  <input type="hidden" name="currency" value="COP" />
-  <input type="hidden" name="amount-in-cents" value="100000" />
-  <input type="hidden" name="reference" value="asdasdasd" />
-  {/* <input type="hidden" name="signature:integrity" value="FIRMA_DE_INTEGRIDAD" /> */}
-  {/* <button type="submit">Pagar con Wompi</button> */}
-  <Button className="w-full mt-5" type="submit">
-                                <CreditCard className="mx-2 w-5" />
-                                Pagar ahora
-                            </Button>
-</form>
                             <Button className="w-full mt-5" onClick={procesarPago}>
                                 <CreditCard className="mx-2 w-5" />
                                 Pagar ahora
