@@ -21,7 +21,7 @@ function App() {
 
   return (
     <>
-     {(location.pathname != "/") && <NavBar />}
+     <NavBar />
       <Routes>
         {/* <Route path="/" element={<Apertura />} /> */}
         <Route path="/" element={<Inicio />} />
