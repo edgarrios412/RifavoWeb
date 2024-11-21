@@ -9,8 +9,8 @@ import { UserProvider } from "./components/context/UserProvider.jsx";
 import MailDesign from "./pages/MailDesign.jsx";
 import { ThemeProvider } from "./components/theme-provider.jsx";
 
-// axios.defaults.baseURL = "https://rifavoback.onrender.com";
-axios.defaults.baseURL = 'http://localhost:3001';
+axios.defaults.baseURL = "https://rifavoback.onrender.com";
+// axios.defaults.baseURL = 'http://localhost:3001';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
