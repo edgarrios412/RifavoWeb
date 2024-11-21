@@ -7,7 +7,7 @@ import { UserContext } from "./components/context/UserContext";
 import Footer from "./components/layout/Footer";
 import Apertura from "./pages/Apertura";
 import Panel from "./pages/Panel";
-import VerificarTicket from "./pages/verificarTicket";
+import VerificarTicket from "./pages/VerificarTicket";
 
 function App() {
 
