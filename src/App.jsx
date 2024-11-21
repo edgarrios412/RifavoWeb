@@ -30,7 +30,7 @@ function App() {
         <Route path="/verificarTicket/:id" element={<VerificarTicket />} />
       </Routes>
       {/* <Footer/> */}
-      {(location.pathname != "/panel" && location.pathname != "/") && <Footer />}
+      {(location.pathname != "/panel") && <Footer />}
     </>
   );
 }
