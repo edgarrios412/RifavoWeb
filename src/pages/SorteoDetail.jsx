@@ -104,7 +104,6 @@ const SorteoDetail = () => {
         }else{
             monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length];
         }
-        alert(descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length])
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
         const cadenaConcatenada = `${reference}${Math.round(monto)}COPtest_integrity_Ui6u6C9xckxpbNnxfYBlnmaDUz8Z2orh`;
