@@ -121,7 +121,7 @@ const Footer = () => {
                             <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
                                 <Instagram />
                             </a>
-                            <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank" className="-mt-[1px]">
+                            <a href="https://www.tiktok.com/@rifavo" target="_blank" className="-mt-[1px]">
                                 <img
                                     src={tiktokIconDark}
                                     alt="Icono de TikTok"
