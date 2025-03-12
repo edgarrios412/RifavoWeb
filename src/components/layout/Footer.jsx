@@ -21,6 +21,8 @@ import {
 import RifavoLight from "../icons/branding/RifavoLight"
 import { Separator } from "../ui/separator"
 import { Button } from "../ui/button"
+import tiktokIconDark from "/tiktok-dark.svg"
+import tiktokIconLight from "/tiktok-light.svg"
 
 const Footer = () => {
 
@@ -118,6 +120,22 @@ const Footer = () => {
                             </a>
                             <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
                                 <Instagram />
+                            </a>
+                            <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank" className="-mt-[1px]">
+                                <img
+                                    src={tiktokIconDark}
+                                    alt="Icono de TikTok"
+                                    width="27"
+                                    height="27"
+                                    className="dark:hidden" // Oculta el icono claro en modo oscuro
+                                />
+                                <img
+                                    src={tiktokIconLight}
+                                    alt="Icono de TikTok"
+                                    width="27"
+                                    height="27"
+                                    className="hidden dark:block" // Muestra el icono oscuro solo en modo oscuro
+                                />
                             </a>
                             {/* <a target="_blank">
                             <Twitter />

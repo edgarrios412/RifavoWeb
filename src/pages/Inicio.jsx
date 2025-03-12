@@ -28,8 +28,8 @@ const Inicio = () => {
     const [sorteos, setSorteos] = useState([])
 
     useEffect(() => {
-        axios.get("/sorteo/listar/all").then(({data}) => setSorteos(data))
-    },[])
+        axios.get("/sorteo/listar/all").then(({ data }) => setSorteos(data))
+    }, [])
 
     return (
         <>
@@ -46,18 +46,18 @@ const Inicio = () => {
                     >
                         {/* <h4 className="mb-4 font-bold">Participa y gana</h4> */}
                         {/* <h1 className="text-[60px] tracking-widest">PORTFOLIO</h1> */}
-                        <h1 className="text-[35px] sm:text-[45px] lg:text-[65px] max-w-[40rem] leading-none font-extrabold">Conviertete en un feliz <span className="font-extrabold bg-gradient-to-r from-orange-500 to-red-500 inline-block text-transparent bg-clip-text">GANADOR</span></h1>
+                        <h1 className="text-[35px] sm:text-[45px] lg:text-[65px] max-w-[40rem] leading-none font-extrabold">Conviertete en un feliz <span className="font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-orange-500 animate-gradient-move inline-block text-transparent bg-clip-text">GANADOR</span></h1>
                         <p className="max-w-[30rem] my-4 text-slate-600 dark:text-slate-300 text-lg">Participa en nuestros sorteos y gana increibles premios <b>¿Que esperas para probar tu suerte?</b></p>
-                        <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#262635] border-l-4 border-l-orange-400 rounded-r-sm pl-4 py-3">
+                        {sorteos.filter(s => !s.numTicketGanadorP1)?.length > 0 && <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#262635] border-l-4 border-l-orange-400 rounded-r-sm pl-4 py-3">
                             <Gift className="w-8 h-8" />
                             <div>
                                 <p className="font-bold">¡Estás de suerte!</p>
-                                <p className="text-slate-500 dark:text-slate-400">Tenemos {sorteos?.length} sorteos activos</p>
+                                <p className="text-slate-500 dark:text-slate-400">Tenemos {sorteos.filter(s => !s.numTicketGanadorP1)?.length} sorteos activos</p>
                             </div>
 
-                        </div>
+                        </div>}
 
-                        <a href="#sorteos"><Button className="mt-8 text-sm sm:text-lg lg:text-xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-7 bg-gradient-to-r from-orange-500 to-red-500"><TicketCheck className="mr-2 w-5 h-5" />Participa ahora</Button></a>
+                        <a href="#sorteos"><Button className="mt-8 text-sm sm:text-lg lg:text-xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-7 bg-gradient-to-r from-orange-500 to-red-500 dark:text-white"><TicketCheck className="mr-2 w-5 h-5" />Participa ahora</Button></a>
                     </motion.div>
                     <motion.div initial={{ x: 100 }}
                         animate={{ x: 0 }}
@@ -114,20 +114,30 @@ const Inicio = () => {
                     <div>
                         <h1 className="text-[35px] sm:text-[45px] lg:text-[60px] mb-20 font-extrabold">Sorteos activos</h1>
                         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-20">
-                            {sorteos.map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
-                                    <img src={s.image[0]} className="rounded-lg px-10 py-4" />
-                                    <div className="text-left px-6">
+                            {sorteos.sort((a, b) => {
+                                if (a.numTicketGanadorP1 === null && b.numTicketGanadorP1 !== null) {
+                                    return -1; // 'a' va antes que 'b'
+                                }
+                                if (a.numTicketGanadorP1 !== null && b.numTicketGanadorP1 === null) {
+                                    return 1; // 'b' va antes que 'a'
+                                }
+                                return 0; // Si ambos son iguales, no hay cambio
+                            }).map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
+                                {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
+                                {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
+                                <img src={s.image[0]} className="rounded-lg px-10 py-4" />
+                                <div className="text-left px-6">
                                     <h2 className="font-bold text-lg my-2">{s.premio1}</h2>
                                     <p className="text-slate-500 mb-2">{s.mindesc}</p>
-                                    <div className="items-center justify-between my-4">
-                                    <Progress value={(s.tickets.length*100)/(s.cantidadTicket*0.6)} className="w-[60%] mb-1 bg-gray-100 dark:bg-gray-600" />
-                                    {s.cantidadTicket*0.6 > s.tickets.length ? <p className="text-sm text-slate-500">Faltan <b>{(s.cantidadTicket*0.6)-s.tickets.length}</b> tickets para iniciar</p>
-                                    :<p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4"/> Sorteo listo para empezar!</p>}
-                                    </div>
-                                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5"/>{Number(s.precioTicket).toLocaleString()} COP</p>
-                                    {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/>{s.fechaSorteo} 10:40PM</p> :<p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5"/> Se iniciará al vender los tickets</p>}
-                                    <Button onClick={() => navigation(`/sorteo/${s.id}`)} className="my-4">Ver detalle del sorteo</Button>
-                                    </div>
+                                    {!s.numTicketGanadorP1 && <div className="items-center justify-between my-4">
+                                        <Progress value={(s.tickets.length * 100) / (s.cantidadTicket * 0.6)} className="w-[60%] mb-1 bg-gray-100 dark:bg-gray-600" />
+                                        {s.cantidadTicket * 0.6 > s.tickets.length ? <p className="text-sm text-slate-500">Faltan <b>{(s.cantidadTicket * 0.6) - s.tickets.length}</b> tickets para iniciar</p>
+                                            : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4" /> Sorteo listo para empezar!</p>}
+                                    </div>}
+                                    <p className={`${s.numTicketGanadorP1 ? "mt-10" : "mt-0"} flex items-center gap-2 font-bold mb-1`}><Ticket className="w-5 h-5" />{Number(s.precioTicket).toLocaleString()} COP</p>
+                                    {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{s.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" /> Se iniciará al vender los tickets</p>}
+                                    <Button onClick={() => navigation(`/sorteo/${s.id}`)} className="my-4 justify-end">Ver detalle del sorteo</Button>
+                                </div>
                             </div>)}
                         </div>
                     </div>

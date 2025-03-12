@@ -15,13 +15,23 @@ function App() {
 
   const location = useLocation()
 
+  const queryParams = new URLSearchParams(location.search);
+  const refValue = queryParams.get('ref');
+
+  useEffect(() => {
+    if (refValue) {
+      localStorage.setItem('ref', refValue)
+    }
+  }
+    , [refValue])
+
   useEffect(() => {
     updateUsuario()
   }, [])
 
   return (
     <>
-     <NavBar />
+      <NavBar />
       <Routes>
         {/* <Route path="/" element={<Apertura />} /> */}
         <Route path="/" element={<Inicio />} />

@@ -36,7 +36,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ArrowDownToLine, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, User } from "lucide-react"
+import { ArrowDownToLine, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users } from "lucide-react"
 import { DownloadTableExcel } from "react-export-table-to-excel"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
@@ -57,7 +57,8 @@ import { pdf } from '@react-pdf/renderer';
 const NavBar = () => {
     const [qrCodes, setQrCodes] = useState({});
     const clientId = "934325083803-p97gi9ef7ckittt88mep8egc5rpfttkb.apps.googleusercontent.com"
-
+    const [showBalance, setShowBalance] = useState(false);
+    
     const generateQRCode = async (ticketId) => {
         if (qrCodes[ticketId]) return qrCodes[ticketId]; // Si ya existe, retorna el Data URL
         const qrDataURL = await toDataURL(ticketId.toString());
@@ -142,6 +143,7 @@ const NavBar = () => {
     }
 
     const registroUsuario = () => {
+        const ref = localStorage.getItem("ref") || null
         if (form.password !== form.password2) return toast({
             variant: "destructive",
             title: "Las contraseñas no coinciden",
@@ -177,7 +179,7 @@ const NavBar = () => {
             title: "Campos incompletos",
             description: "La contraseña debe tener al menos 8 caracteres",
         })
-        axios.post("/user", form).then(({ data }) => {
+        axios.post("/user", { ...form, father: ref, firstDiscount: ref ? true : false }).then(({ data }) => {
             setLogin(true)
             toast({
                 title: "Registro exitoso",
@@ -233,6 +235,40 @@ const NavBar = () => {
         }))
     }
 
+    const copiarAlPortapapeles = async (texto) => {
+        try {
+            await navigator.clipboard.writeText(texto);
+            toast({
+                variant: "default",
+                duration: 2500,
+                title: "Texto copiado exitosamente",
+            })
+            // Enviar alerta
+        } catch (error) {
+            console.error("Error al copiar al portapapeles: ", error);
+            toast({
+                variant: "destructive",
+                title: "Ha ocurrido un error",
+                description: "No se pudo copiar al portapapeles",
+            })
+            // Enviar error
+        }
+    };
+
+    const formatNumber = (num) => {
+        // Usamos la configuración regional de España ('es-ES') para obtener el formato deseado
+        const formatter = new Intl.NumberFormat('es-ES', {
+            minimumFractionDigits: 2, // Para tener siempre 2 decimales
+            maximumFractionDigits: 2, // Limitar a 2 decimales
+        });
+
+        return formatter.format(num);
+    };
+
+    useEffect(() => {
+        setShowBalance(false)
+    },[isOpen])
+
     return (
         <>
             <Dialog open={isOpen == 1} onOpenChange={() => setIsOpen(0)}>
@@ -285,10 +321,10 @@ const NavBar = () => {
                                                     </Avatar>
                                                     <div className="space-y-1">
                                                         <h4 className="text-sm font-semibold">
-                                                            {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.name)} {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.lastname)}
+                                                            {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1)?.user?.name)} {obfuscateName(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1)?.user?.lastname)}
                                                         </h4>
                                                         <p className="text-sm">
-                                                            {obfuscateEmail(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1).user.email)}
+                                                            {obfuscateEmail(t?.sorteo?.ganadores?.find(g => g.premioNumero == 1)?.user?.email)}
                                                         </p>
                                                         <div className="flex items-center pt-2">
                                                             <CalendarDays className="mr-1 h-4 w-4 opacity-70" />{" "}
@@ -369,22 +405,112 @@ const NavBar = () => {
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="orange" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {ticket.sorteo.numTicketGanadorP1 ?? "Aún no hay ganador"}
+                                    {!ticket.sorteo.numTicketGanadorP1 ? "Aún no hay ganador" : <HoverCard>
+  <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex justify-start gap-4">
+                            <Avatar>
+                                <AvatarImage src="https://github.com/vercel.png" />
+                                <AvatarFallback>VC</AvatarFallback>
+                            </Avatar>
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-semibold">
+                                    {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.lastname)}
+                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                </h4>
+                                <p className="text-sm">
+                                    {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.email)}
+                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                </p>
+                            </div>
+                        </div>
+  </HoverCardContent>
+</HoverCard>}
                                 </span>
                             </div>
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="gray" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {ticket.sorteo.numTicketGanadorP2 ?? "Aún no hay ganador"}
+                                {!ticket.sorteo.numTicketGanadorP2 ? "Aún no hay ganador" : <HoverCard>
+  <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex justify-start gap-4">
+                            <Avatar>
+                                <AvatarImage src="https://github.com/vercel.png" />
+                                <AvatarFallback>VC</AvatarFallback>
+                            </Avatar>
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-semibold">
+                                    {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.lastname)}
+                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                </h4>
+                                <p className="text-sm">
+                                    {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.email)}
+                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                </p>
+                            </div>
+                        </div>
+  </HoverCardContent>
+</HoverCard>}
                                 </span>
                             </div>
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="brown" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {ticket.sorteo.numTicketGanadorP3 ?? "Aún no hay ganador"}
+                                {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : <HoverCard>
+  <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
+  <HoverCardContent>
+    <div className="flex justify-start gap-4">
+                            <Avatar>
+                                <AvatarImage src="https://github.com/vercel.png" />
+                                <AvatarFallback>VC</AvatarFallback>
+                            </Avatar>
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-semibold">
+                                    {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.lastname)}
+                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                </h4>
+                                <p className="text-sm">
+                                    {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.email)}
+                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                </p>
+                            </div>
+                        </div>
+  </HoverCardContent>
+</HoverCard>}
                                 </span>
                             </div>
                         </div></>}
+                </DialogContent>
+            </Dialog>
+            <Dialog open={isOpen == 4} onOpenChange={() => setIsOpen(0)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Referidos</DialogTitle>
+                        <DialogDescription>Recibe un 5% de las compras de por vida de tus referidos, y regálale un 5% de descuento de su primera compra</DialogDescription>
+                    </DialogHeader>
+                    <div className="flex flex-row gap-4">
+                        <Input onChange={(e) => setTicketId(e.target.value)} value={`https://www.rifavo.com/?ref=${usuario?.id}`} placeholder="ID del ticket" />
+                        <Button onClick={() => copiarAlPortapapeles(`https://www.rifavo.com/?ref=${usuario?.id}`)}>Copiar</Button>
+                    </div>
+                    <div className="flex items-center justify-center p-4">
+                        <QRCode value={`https://rifavo.com/?ref=${usuario?.id}`} />
+                    </div>
+                    <div className="relative">
+                        <div
+                            className={`bg-gradient-to-r from-green-500 to-green-700 p-4 rounded-lg items-center justify-center flex flex-col transition-all duration-300 ${!showBalance ? 'filter blur-sm' : ''}`}>
+                            <p className="font-semibold text-white text-xl">${formatNumber(usuario?.income)} COP</p>
+                            <p className="text-white text-sm">Balance disponible</p>
+                        </div>
+
+                        {/* Botón para mostrar/ocultar el balance */}
+                        <button
+                            onClick={() => setShowBalance(!showBalance)}
+                            className="absolute top-4 right-4 bg-white text-green-600 px-4 py-2 rounded-lg shadow-md hover:bg-green-500 hover:text-white transition duration-300">
+                            {showBalance ? 'Ocultar' : 'Mostrar'}
+                        </button>
+                    </div>
+                    <DialogDescription className="text-center">Para realizar un retiro debes comunicarte con el soporte de RIFAVO</DialogDescription>
                 </DialogContent>
             </Dialog>
             <div className="fixed w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
@@ -439,6 +565,13 @@ const NavBar = () => {
                                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup></a>}
+                            <DropdownMenuGroup onClick={() => setIsOpen(4)}>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <Users className="mr-2 h-4 w-4" />
+                                    <span>Referidos</span>
+                                    {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => { setUsuario(null); localStorage.removeItem("token") }} className="cursor-pointer hover:!bg-red-200">
                                 <LogOut className="mr-2 h-4 w-4" />
