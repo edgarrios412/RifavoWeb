@@ -19,6 +19,6 @@ export const obfuscateEmail = (email) => {
         // Juntar el nombre y el apellido ofuscados
         return `${obfuscatedEmail}@${correo}`;
     }else{
-        return "No existe email";
+        return "Nadie adquirió el número, el premio es de la casa";
     }
 }

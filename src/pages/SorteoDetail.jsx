@@ -96,14 +96,15 @@ const SorteoDetail = () => {
     };
 
     const pagarAhora = async () => {
-        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6:850 }
+        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6:0.850 }
         const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6:0.800 }
         let monto;
         if(usuario.firstDiscount){
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 5 ? 6 : misNumeros.length];
         }else{
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length];
         }
+        alert(descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length])
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
         const cadenaConcatenada = `${reference}${Math.round(monto)}COPtest_integrity_Ui6u6C9xckxpbNnxfYBlnmaDUz8Z2orh`;
@@ -301,7 +302,7 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                                 <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname)}
+                                    {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
                                     {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
                                 <p className="text-sm">
@@ -326,8 +327,8 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                             <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname)}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
+                            {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
                                 <p className="text-sm">
                                     {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
@@ -351,8 +352,8 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                             <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname)}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
+                            {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
                                 <p className="text-sm">
                                     {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
@@ -411,10 +412,10 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                             <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname)}
+                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
                                     {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
-                                <p className="text-sm">
+                                <p className="text-sm font-normal">
                                     {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.email)}
                                     {/* {obfuscateEmail(ticket?.user?.email)} */}
                                 </p>
@@ -445,10 +446,10 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                             <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname)}
+                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
                                     {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
-                                <p className="text-sm">
+                                <p className="text-sm font-normal">
                                     {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
                                     {/* {obfuscateEmail(ticket?.user?.email)} */}
                                 </p>
@@ -479,10 +480,10 @@ const SorteoDetail = () => {
                             </Avatar>
                             <div className="space-y-1">
                             <h4 className="text-sm font-semibold">
-                                    {obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname)}
+                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
                                     {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                 </h4>
-                                <p className="text-sm">
+                                <p className="text-sm font-normal">
                                     {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
                                     {/* {obfuscateEmail(ticket?.user?.email)} */}
                                 </p>
@@ -605,12 +606,12 @@ const SorteoDetail = () => {
                             <h2 className="font-bold text-lg mb-4">Detalles de la compra</h2>
                             <h3>Has seleccionado {misNumeros.length} numeros</h3>
                             <p className="flex gap-2 items-center"><Ticket className="w-5 h-5" /> {Number(sorteo.precioTicket).toLocaleString()} COP/ticket</p>
-                            {misNumeros.length == 1 &&<p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5%</b>}</b></p>}
-                            {misNumeros.length == 2 &&<p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString())} COP <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5% {usuario?.firstDiscount && "+ 5% = 10%"}</b></b></p>}
-                            {misNumeros.length == 3 &&<p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.925)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 7.5% {usuario?.firstDiscount && "+ 5% = 12.5%"}</b></b></p>}
-                            {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>}
-                            {misNumeros.length == 5 && <p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>}
-                            {misNumeros.length >= 6 && <p>Total a pagar <b>{usuario.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>}
+                            {misNumeros.length == 1 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5%</b>}</b></p>}
+                            {misNumeros.length == 2 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString())} COP <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5% {usuario?.firstDiscount && "+ 5% = 10%"}</b></b></p>}
+                            {misNumeros.length == 3 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.925)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 7.5% {usuario?.firstDiscount && "+ 5% = 12.5%"}</b></b></p>}
+                            {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>}
+                            {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>}
+                            {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>}
                             <p className="text-sm text-slate-500 mt-4 max-w-72">Al pagar se enviará un comprobante a tu correo de los números que has adquirido</p>
                         </div>
                         <div>
