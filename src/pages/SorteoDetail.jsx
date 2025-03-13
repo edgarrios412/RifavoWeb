@@ -10,7 +10,7 @@ import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
 import ani1 from '../../public/animations/empty.json';
 import winner from '../../public/animations/winner.json';
-import { CalendarDays, CheckCircle2, ChevronLeft, CreditCard, Ticket, Trophy } from "lucide-react"
+import { CalendarDays, CheckCircle2, ChevronLeft, CreditCard, MessageCircleWarning, Ticket, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Lottie from "lottie-react"
@@ -100,9 +100,11 @@ const SorteoDetail = () => {
         const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6:0.800 }
         let monto;
         if(usuario.firstDiscount){
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 5 ? 6 : misNumeros.length];
+            // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 5 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100 * 0.9;
         }else{
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length];
+            // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100;
         }
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
@@ -200,6 +202,11 @@ const SorteoDetail = () => {
             title: "Ha ocurrido un error",
             description: "Debes seleccionar al menos un numero para pagar",
         })
+        if(sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo) return toast({
+            variant: "destructive",
+            title: `Tus tickets deben ser multiplo de ${sorteo.multiplo}`,
+            description: `Necesitas seleccionar ${sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más para poder continuar`,
+        })
         if (!paymentMethod) return toast({
             variant: "destructive",
             title: "Ha ocurrido un error",
@@ -222,9 +229,11 @@ const SorteoDetail = () => {
         const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6:0.800 }
         let monto;
         if(usuario.firstDiscount){
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100 * 0.9;
         }else{
-            monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 6 ? 6 : misNumeros.length];
+            monto = misNumeros.length * sorteo.precioTicket * 100;
         }
         await axios.post("/sorteo/procesarCompra/tickets", {
             userId: usuario?.id,
@@ -500,8 +509,8 @@ const SorteoDetail = () => {
                     {usuario?.firstDiscount && <div className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move mb-10 p-5 rounded-sm flex items-center gap-6 overflow-hidden h-26">
                         <img src={discount} className="h-28"/>
                         <div>
-                        <p className="font-semibold text-white">Felicidades, tienes un descuento del 5% en tu primera compra</p>
-                        <p className="font-normal text-white max-w-96 my-4 text-sm">Realiza una compra y obtén un descuento adicional del 5% en tu primera compra, mientras más tickets compres, mayor será el ahorro!</p>
+                        <p className="font-semibold text-white">Felicidades, tienes un descuento del 10% en tu primera compra</p>
+                        <p className="font-normal text-white max-w-96 my-4 text-sm">Realiza una compra y obtén un descuento adicional del 10% en tu primera compra, mientras más tickets compres, mayor será el ahorro!</p>
                         </div>
                     </div>}
                     <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
@@ -528,6 +537,19 @@ const SorteoDetail = () => {
                             }
                         })}
                     </div>
+                    {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
+                        {/* <img src={discount} className="h-28"/> */}
+                        <div className="flex items-center justify-center gap-2">
+                        <MessageCircleWarning />
+                        <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
+                        </div>
+                    </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
+                        {/* <img src={discount} className="h-28"/> */}
+                        <div className="flex items-center justify-center gap-2">
+                        <CheckCircle2 />
+                        <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
+                        </div>
+                    </div>)}
                     {/* PAGOS */}
                     {!usuario && <><Separator className="mt-6" />
                         <div className="mt-6 flex flex-col lg:flex-row justify-between">
@@ -605,12 +627,13 @@ const SorteoDetail = () => {
                             <h2 className="font-bold text-lg mb-4">Detalles de la compra</h2>
                             <h3>Has seleccionado {misNumeros.length} numeros</h3>
                             <p className="flex gap-2 items-center"><Ticket className="w-5 h-5" /> {Number(sorteo.precioTicket).toLocaleString()} COP/ticket</p>
-                            {misNumeros.length == 1 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5%</b>}</b></p>}
-                            {misNumeros.length == 2 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString())} COP <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5% {usuario?.firstDiscount && "+ 5% = 10%"}</b></b></p>}
-                            {misNumeros.length == 3 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.925)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 7.5% {usuario?.firstDiscount && "+ 5% = 12.5%"}</b></b></p>}
-                            {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>}
-                            {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>}
-                            {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>}
+                            {/* {misNumeros.length == 1 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5%</b>}</b></p>} */}
+                            {/* {misNumeros.length == 2 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString())} COP <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5% {usuario?.firstDiscount && "+ 5% = 10%"}</b></b></p>} */}
+                            {/* {misNumeros.length == 3 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.925)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 7.5% {usuario?.firstDiscount && "+ 5% = 12.5%"}</b></b></p>} */}
+                            {/* {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>} */}
+                            {/* {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>} */}
+                            {/* {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>} */}
+                            <p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
                             <p className="text-sm text-slate-500 mt-4 max-w-72">Al pagar se enviará un comprobante a tu correo de los números que has adquirido</p>
                         </div>
                         <div>
