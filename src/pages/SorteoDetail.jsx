@@ -10,7 +10,7 @@ import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
 import ani1 from '../../public/animations/empty.json';
 import winner from '../../public/animations/winner.json';
-import { CalendarDays, CheckCircle2, ChevronLeft, CreditCard, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
+import { CalendarDays, CheckCircle2, ChevronLeft, Clover, CreditCard, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Lottie from "lottie-react"
@@ -400,7 +400,7 @@ const SorteoDetail = () => {
                     </div>}
                     <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />{Number(sorteo.precioTicket).toLocaleString()} COP/ticket</p>
                     <p className="text-slate-500 flex items-center gap-2"><TicketX className="dark:text-white text-black w-5 h-5" /> Tus tickets deben ser multiplo de <b>{sorteo.multiplo}</b></p>
-                    <p className="text-slate-500 flex items-center gap-2"><Flower className="dark:text-white text-black w-5 h-5" /> Tienes <b>x{sorteo.multiplo*3} oportunidades de ganar</b></p>
+                    <p className="text-slate-500 flex items-center gap-2"><Clover className="dark:text-white text-black w-5 h-5" /> Tienes <b>x{sorteo.multiplo*3} oportunidades de ganar</b></p>
                     {sorteo.fechaSorteo ? <p className="text-slate-500 flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{sorteo.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" /> Se iniciará al vender los tickets</p>}
                     <div className="mt-10 text-sm">
                         <p className="font-bold mb-2">Terminos y condiciones</p>
