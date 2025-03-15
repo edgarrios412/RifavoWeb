@@ -424,59 +424,24 @@ const NavBar = () => {
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="orange" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {!ticket.sorteo.numTicketGanadorP1 ? "Aún no hay ganador" : <HoverCard>
-                                        <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
-                                        <HoverCardContent>
-                                            <div className="flex justify-start gap-4">
-                                                <Avatar>
-                                                    <AvatarImage src="https://github.com/vercel.png" />
-                                                    <AvatarFallback>VC</AvatarFallback>
-                                                </Avatar>
-                                                <div className="space-y-1">
-                                                    <h4 className="text-sm font-semibold">
-                                                        {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.lastname)}
-                                                        {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                                    </h4>
-                                                    <p className="text-sm">
-                                                        {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP1)?.user?.email)}
-                                                        {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </HoverCardContent>
-                                    </HoverCard>}
+                                    {!ticket.sorteo.numTicketGanadorP1 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP1}
                                 </span>
                             </div>
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="gray" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {!ticket.sorteo.numTicketGanadorP2 ? "Aún no hay ganador" : <HoverCard>
-                                        <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
-                                        <HoverCardContent>
-                                            <div className="flex justify-start gap-4">
-                                                <Avatar>
-                                                    <AvatarImage src="https://github.com/vercel.png" />
-                                                    <AvatarFallback>VC</AvatarFallback>
-                                                </Avatar>
-                                                <div className="space-y-1">
-                                                    <h4 className="text-sm font-semibold">
-                                                        {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.lastname)}
-                                                        {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                                    </h4>
-                                                    <p className="text-sm">
-                                                        {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP2)?.user?.email)}
-                                                        {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </HoverCardContent>
-                                    </HoverCard>}
+                                <span className="text-normal font-bold">
+                                    {!ticket.sorteo.numTicketGanadorP2 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP2}
+                                </span>
                                 </span>
                             </div>
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="brown" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                    {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : <HoverCard>
+                                <span className="text-normal font-bold">
+                                    {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP3}
+                                </span>
+                                    {/* {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : <HoverCard>
                                         <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
                                         <HoverCardContent>
                                             <div className="flex justify-start gap-4">
@@ -486,19 +451,17 @@ const NavBar = () => {
                                                 </Avatar>
                                                 <div className="space-y-1">
                                                     <h4 className="text-sm font-semibold">
-                                                        {obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.lastname)}
-                                                        {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
                                                     </h4>
                                                     <p className="text-sm">
                                                         {obfuscateEmail(ticket.sorteo.ganadores.find(g => g.ticket.numero == ticket.sorteo.numTicketGanadorP3)?.user?.email)}
-                                                        {/* {obfuscateEmail(ticket?.user?.email)} */}
                                                     </p>
                                                 </div>
                                             </div>
                                         </HoverCardContent>
-                                    </HoverCard>}
+                                    </HoverCard>} */}
                                 </span>
                             </div>
+                        <Button className="mt-6" onClick={() => {navigation(`/sorteo/${ticket.sorteo.id}`); setIsOpen(null)}}>Ver sorteo</Button>
                         </div></>}
                 </DialogContent>
             </Dialog>

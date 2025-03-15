@@ -30,11 +30,11 @@ const VerificarTicket = () => {
                 <ScanSearch />
                 <h1 className="font-bold text-xl">Verificando la validez del ticket #{id}</h1>
             </div>}
-            {ticket == true && <div className="w-full h-[100vh] gap-2 flex items-center justify-center text-green-700">
+            {ticket && <div className="w-full h-[100vh] gap-2 flex items-center justify-center text-green-700">
                 <BadgeCheck />
                 <h1 className="font-bold text-xl">Ticket válido</h1>
             </div>}
-            {ticket == false && <div className="w-full h-[100vh] gap-2 flex items-center justify-center text-red-700">
+            {!ticket && <div className="w-full h-[100vh] gap-2 flex items-center justify-center text-red-700">
                 <TicketX />
                 <h1 className="font-bold text-xl">Ticket inválido</h1>
             </div>}

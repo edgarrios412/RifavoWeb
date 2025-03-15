@@ -19,7 +19,7 @@ import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
-  } from "@/components/ui/hover-card"
+} from "@/components/ui/hover-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import discount from "/discount.png"
@@ -28,7 +28,7 @@ const SorteoDetail = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     // const [monto, setMonto] = useState(50000)
-    const { usuario, setUsuario } = useContext(UserContext)
+    const { usuario, setUsuario, updateUsuario } = useContext(UserContext)
     const [sorteo, setSorteo] = useState({})
     const numeros = Array.from({ length: sorteo?.cantidadTicket }, (_, index) => index);
     const [numerosComprados, setNumerosComprados] = useState([]);
@@ -39,6 +39,8 @@ const SorteoDetail = () => {
     const [login, setLogin] = useState(true)
     const [hayGanadores, setHayGanadores] = useState(false)
     const [invitado, setInvitado] = useState({})
+    const [currentPage, setCurrentPage] = useState(1); // Página actual
+    const [numerosPorPagina] = useState(1000); // Número de elementos por página
 
     const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
@@ -49,8 +51,8 @@ const SorteoDetail = () => {
 
     useEffect(() => {
         if (queryId && usuario) {
-            axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
-                // axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+            // axios.get("https://api-sandbox.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
+                axios.get("https://production.wompi.co/v1/transactions/" + queryId).then(({ data }) => {
                 if (data.data.status == "APPROVED") {
                     const numerosComprados = JSON.parse(localStorage.getItem('numerosComprados'));
                     if (numerosComprados) {
@@ -96,20 +98,20 @@ const SorteoDetail = () => {
     };
 
     const pagarAhora = async () => {
-        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6:0.850 }
-        const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6:0.800 }
+        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6: 0.850 }
+        const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6: 0.800 }
         let monto;
-        if(usuario.firstDiscount){
+        if (usuario.firstDiscount) {
             // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 5 ? 6 : misNumeros.length];
             monto = misNumeros.length * sorteo.precioTicket * 100 * 0.9;
-        }else{
+        } else {
             // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 5 ? 6 : misNumeros.length];
             monto = misNumeros.length * sorteo.precioTicket * 100;
         }
         localStorage.setItem('numerosComprados', JSON.stringify(misNumeros));
         const reference = new Date().getTime().toString();
-        const cadenaConcatenada = `${reference}${Math.round(monto)}COPtest_integrity_Ui6u6C9xckxpbNnxfYBlnmaDUz8Z2orh`;
-        // const cadenaConcatenada = `${reference}${Math.round(monto)}COPprod_integrity_9lGnmGtF1stMekNwKFq0Uh0mki74ObJy`;
+        // const cadenaConcatenada = `${reference}${Math.round(monto)}COPtest_integrity_Ui6u6C9xckxpbNnxfYBlnmaDUz8Z2orh`;
+        const cadenaConcatenada = `${reference}${Math.round(monto)}COPprod_integrity_9lGnmGtF1stMekNwKFq0Uh0mki74ObJy`;
         const encondedText = new TextEncoder().encode(cadenaConcatenada);
         const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -117,21 +119,21 @@ const SorteoDetail = () => {
 
         var checkout = new WidgetCheckout({
             currency: 'COP',
-            // publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
-            publicKey:"pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
+            publicKey: "pub_prod_GmYXcJr5xCBuR7uNULcUBcYqs54hp4Vf",
+            // publicKey: "pub_test_RHtI9AzUsVhum9ryA6Dz43dS2rS3zUFi",
             amountInCents: Math.round(monto),
             reference: reference,
-            signature: {integrity: hashHex},
-            redirectUrl: `http://localhost:5173/sorteo/${id}`
-            // redirectUrl: `https://wwww.rifavo.com/sorteo/${id}`
+            signature: { integrity: hashHex },
+            // redirectUrl: `http://localhost:5173/sorteo/${id}`
+            redirectUrl: `https://wwww.rifavo.com/sorteo/${id}`
         });
         checkout.open(function (result) {
             var transaction = result.transaction;
             console.log("Checkout Open: ", result)
             if (transaction.status == "APPROVED") {
                 const father = usuario?.father
-                if(father){
-                    axios.put("/user/referido", { monto: Math.round((monto/100)*0.05), father, firstDiscount: usuario?.firstDiscount, userId: usuario?.id }).then(({data}) => console.log("Exitoso"))
+                if (father) {
+                    axios.put("/user/referido", { monto: Math.round((monto / 100) * 0.05), father, firstDiscount: usuario?.firstDiscount, userId: usuario?.id }).then(({ data }) => updateUsuario())
                 }
                 axios.post("/sorteo/comprar/tickets", { tickets: misNumeros, sorteoId: id, userId: usuario.id })
                     .then(({ data }) => {
@@ -202,7 +204,7 @@ const SorteoDetail = () => {
             title: "Ha ocurrido un error",
             description: "Debes seleccionar al menos un numero para pagar",
         })
-        if(sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo) return toast({
+        if (sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo) return toast({
             variant: "destructive",
             title: `Tus tickets deben ser multiplo de ${sorteo.multiplo}`,
             description: `Necesitas seleccionar ${sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más para poder continuar`,
@@ -225,20 +227,20 @@ const SorteoDetail = () => {
     }
 
     const procesarCompra = async () => {
-        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6:850 }
-        const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6:0.800 }
+        const descuentos = { 1: 1, 2: 0.950, 3: 0.925, 4: 0.900, 5: 0.875, 6: 850 }
+        const descuentosFirstDiscount = { 1: 0.950, 2: 0.900, 3: 0.875, 4: 0.850, 5: 0.825, 6: 0.800 }
         let monto;
-        if(usuario.firstDiscount){
+        if (usuario.firstDiscount) {
             // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentosFirstDiscount[misNumeros.length >= 6 ? 6 : misNumeros.length];
             monto = misNumeros.length * sorteo.precioTicket * 100 * 0.9;
-        }else{
+        } else {
             // monto = misNumeros.length * sorteo.precioTicket * 100 * descuentos[misNumeros.length >= 6 ? 6 : misNumeros.length];
             monto = misNumeros.length * sorteo.precioTicket * 100;
         }
         await axios.post("/sorteo/procesarCompra/tickets", {
             userId: usuario?.id,
             sorteoId: id,
-            monto: monto/100,
+            monto: monto / 100,
             tickets: misNumeros
         })
     }
@@ -286,6 +288,15 @@ const SorteoDetail = () => {
         console.log(sorteo)
     }, [sorteo])
 
+    // Lógica para dividir los números en páginas
+    const indexOfLastNumber = currentPage * numerosPorPagina; // Último número de la página
+    const indexOfFirstNumber = indexOfLastNumber - numerosPorPagina; // Primer número de la página
+    const currentNumbers = filteredNumeros.slice(indexOfFirstNumber, indexOfLastNumber); // Números de la página actual
+
+    // Cambiar de página
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const totalPages = Math.ceil(filteredNumeros.length / numerosPorPagina);
+
     return (
         <>
             <Dialog open={hayGanadores} onOpenChange={setHayGanadores}>
@@ -301,76 +312,76 @@ const SorteoDetail = () => {
                                 ¡Premio Mayor!
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                                <h4 className="text-sm font-semibold">
-                                    {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>
                             <Separator className="mt-2 mb-3" />
                             <p className="font-extrabold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Segundo premio
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
-                            {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>
                             <Separator className="mt-2 mb-3" />
                             <p className="font-extrabold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Tercer premio
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
-                            {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>
                         </div>
                     </div>
                 </DialogContent>
@@ -411,26 +422,26 @@ const SorteoDetail = () => {
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería de Boyacá</p>
                             {sorteo.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" />{sorteo.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" /> Se anunciará pronto</p>}
                             {sorteo.numTicketGanadorP1 && <p className="text-lg font-bold flex items-center mt-2 gap-2"><Trophy color="orange" className="w-5 h-5" /><HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm font-normal">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>}
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP1}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm font-normal">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP1)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>}
                         </div>
                     </div>
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-gray-500 border border-transparent cursor-pointer transition">
@@ -445,26 +456,26 @@ const SorteoDetail = () => {
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería Cauca</p>
                             {sorteo.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" />{sorteo.fechaSorteo} 09:40PM</p> : <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" /> Se anunciará pronto</p>}
                             {sorteo.numTicketGanadorP2 && <p className="text-lg font-bold flex items-center mt-2 gap-2"><Trophy color="gray" className="w-5 h-5" /><HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm font-normal">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>}
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP2}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm font-normal">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP2)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>}
                         </div>
                     </div>
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-900 border border-transparent cursor-pointer transition">
@@ -479,26 +490,26 @@ const SorteoDetail = () => {
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería Pijao Noche</p>
                             {sorteo.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" />{sorteo.fechaSorteo} 09:00PM</p> : <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" /> Se anunciará pronto</p>}
                             {sorteo.numTicketGanadorP3 && <p className="text-lg font-bold flex items-center mt-2 gap-2"><Trophy color="brown" className="w-5 h-5" /><HoverCard>
-  <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
-  <HoverCardContent>
-    <div className="flex justify-start gap-4">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/vercel.png" />
-                                <AvatarFallback>VC</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                            {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
-                                    {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
-                                </h4>
-                                <p className="text-sm font-normal">
-                                    {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
-                                    {/* {obfuscateEmail(ticket?.user?.email)} */}
-                                </p>
-                            </div>
-                        </div>
-  </HoverCardContent>
-</HoverCard></p>}
+                                <HoverCardTrigger><b className="underline">{sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex justify-start gap-4">
+                                        <Avatar>
+                                            <AvatarImage src="https://github.com/vercel.png" />
+                                            <AvatarFallback>VC</AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-semibold">
+                                                {sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name ? obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.name) + " " + obfuscateName(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.lastname) : "RIFAVO"}
+                                                {/* {obfuscateName(ticket?.user?.name) + " " + obfuscateName(ticket?.user?.lastname)} */}
+                                            </h4>
+                                            <p className="text-sm font-normal">
+                                                {obfuscateEmail(sorteo?.tickets?.find(t => t.numero == sorteo.numTicketGanadorP3)?.user?.email)}
+                                                {/* {obfuscateEmail(ticket?.user?.email)} */}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard></p>}
                         </div>
                     </div>
                 </div>
@@ -507,14 +518,14 @@ const SorteoDetail = () => {
             {!sorteo.numTicketGanadorP1 && <div className="my-20 mx-5 lg:mx-0 text-start flex items-center justify-center gap-64 min-h-[60vh]">
                 <div>
                     {usuario?.firstDiscount && <div className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move mb-10 p-5 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                        <img src={discount} className="h-28"/>
+                        <img src={discount} className="h-28" />
                         <div>
-                        <p className="font-semibold text-white">Felicidades, tienes un descuento del 10% en tu primera compra</p>
-                        <p className="font-normal text-white max-w-96 my-4 text-sm">Realiza una compra y obtén un descuento adicional del 10% en tu primera compra, mientras más tickets compres, mayor será el ahorro!</p>
+                            <p className="font-semibold text-white">Felicidades, tienes un descuento del 10% en tu primera compra</p>
+                            <p className="font-normal text-white max-w-96 my-4 text-sm">Realiza una compra y obtén un descuento adicional del 10% en tu primera compra, mientras más tickets compres, mayor será el ahorro!</p>
                         </div>
                     </div>}
                     <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
-                    <Input type="number" placeholder="Filtrar tus numeros favoritos" onChange={(e) => setFilter(e.target.value)} />
+                    <Input type="number" placeholder="Filtrar tus numeros favoritos" onChange={(e) => {setFilter(e.target.value); setCurrentPage(1)}} />
                     {
                         !filteredNumeros.length &&
                         <div className="flex flex-col items-center min-w-[45rem]">
@@ -525,7 +536,7 @@ const SorteoDetail = () => {
                         </div>
                     }
                     <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-10 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">
-                        {filteredNumeros.map((index) => {
+                        {currentNumbers.map((index) => {
                             if (!numerosComprados.includes(index)) {
                                 return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
                                     {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
@@ -537,17 +548,40 @@ const SorteoDetail = () => {
                             }
                         })}
                     </div>
+                    {/* Paginación */}
+                    {sorteo.cantidadTicket > 1000 && <div className="flex justify-center items-center mt-6 mb-10">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-black text-white rounded-sm"
+                        >
+                            Anterior
+                        </button>
+
+                        {/* Mostrar 1 de X */}
+                        <span className="mx-4">
+                            Página {currentPage} de {totalPages}
+                        </span>
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage * numerosPorPagina >= filteredNumeros.length}
+                            className="px-4 py-2 bg-black text-white rounded-sm"
+                        >
+                            Siguiente
+                        </button>
+                    </div>}
                     {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
                         {/* <img src={discount} className="h-28"/> */}
                         <div className="flex items-center justify-center gap-2">
-                        <MessageCircleWarning />
-                        <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
+                            <MessageCircleWarning />
+                            <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
                         </div>
                     </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
                         {/* <img src={discount} className="h-28"/> */}
                         <div className="flex items-center justify-center gap-2">
-                        <CheckCircle2 />
-                        <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
+                            <CheckCircle2 />
+                            <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
                         </div>
                     </div>)}
                     {/* PAGOS */}
@@ -633,7 +667,7 @@ const SorteoDetail = () => {
                             {/* {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>} */}
                             {/* {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>} */}
                             {/* {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>} */}
-                            <p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
+                            <p>Total a pagar $<b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} COP {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
                             <p className="text-sm text-slate-500 mt-4 max-w-72">Al pagar se enviará un comprobante a tu correo de los números que has adquirido</p>
                         </div>
                         <div>
