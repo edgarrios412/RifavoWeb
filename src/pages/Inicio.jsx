@@ -125,7 +125,9 @@ const Inicio = () => {
                             }).map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
                                 {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
                                 {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
-                                <img src={s.image[0]} className="rounded-lg px-10 py-4" />
+                                <div className="flex items-center justify-center">
+                                <img src={s.image[0]} className="rounded-2xl mx-0 my-6 max-h-72" />
+                                </div>
                                 <div className="text-left px-6">
                                     <h2 className="font-bold text-lg my-2">{s.premio1}</h2>
                                     <p className="text-slate-500 mb-2">{s.mindesc}</p>
