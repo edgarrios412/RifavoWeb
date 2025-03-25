@@ -22,7 +22,7 @@ const Panel = () => {
     useEffect(() => {
         if (!usuario) return navigate("/")
         if(usuario?.role >= 0){
-            if (usuario?.role < 1) return navigate("/")
+            if (usuario?.role < 10) return navigate("/")
             setLoading(false)
         }
     }, [usuario])

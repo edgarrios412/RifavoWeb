@@ -8,8 +8,8 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
-import ani1 from '../../public/animations/empty.json';
-import winner from '../../public/animations/winner.json';
+import ani1 from '/animations/empty.json?url';
+import winner from '/animations/winner.json?url';
 import { CalendarDays, CheckCircle2, ChevronLeft, Clover, CreditCard, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
@@ -388,7 +388,7 @@ const SorteoDetail = () => {
             </Dialog>
 
             {/* DETALLES DEL SORTEO */}
-            <div className="text-start flex flex-col py-24 px-10 lg:px-0 lg:py-0 lg:flex-row items-center justify-center gap-10 lg:gap-40 min-h-[60vh]">
+            <div className="text-start mt-20 flex flex-col py-24 px-10 lg:px-0 lg:py-0 lg:flex-row items-center justify-center gap-10 lg:gap-40 min-h-[60vh]">
                 <Carrusel imagenes={sorteo?.image?.length > 1 ? [...sorteo.image] : [sorteo.image]} />
                 <div className="max-w-96">
                     <h2 className="font-bold text-xl my-2 flex gap-4 items-center"><Button onClick={() => navigate("/")} className="flex gap-2"><ChevronLeft className="w-5 h-5" />Volver</Button> {sorteo.premio1}</h2>
@@ -527,11 +527,11 @@ const SorteoDetail = () => {
                         </div>
                     </div>}
                     <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
-                    <Input type="number" placeholder="Filtrar tus numeros favoritos" onChange={(e) => {setFilter(e.target.value); setCurrentPage(1)}} />
+                    <Input type="number" placeholder="Busca tu numero ganador" onChange={(e) => {setFilter(e.target.value); setCurrentPage(1)}} />
                     {
                         !filteredNumeros.length &&
                         <div className="flex flex-col items-center min-w-[45rem]">
-                            <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} />
+                            {/* <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} /> */}
                             <p key={1} className={`flex items-center justify-center text-center mx-auto mt-4 text-slate-500`}>
                                 No hemos conseguido el número que estás buscando
                             </p>
@@ -661,7 +661,7 @@ const SorteoDetail = () => {
                     <div className="flex flex-col lg:flex-row lg:mt-6 mt-10 justify-between">
                         <div>
                             <h2 className="font-bold text-lg mb-4">Detalles de la compra</h2>
-                            <h3>Has seleccionado {misNumeros.length} numeros</h3>
+                            <h3>Has seleccionado {misNumeros?.length} numeros</h3>
                             <p className="flex gap-2 items-center"><Ticket className="w-5 h-5" /> {Number(sorteo.precioTicket).toLocaleString()} COP/ticket</p>
                             {/* {misNumeros.length == 1 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5%</b>}</b></p>} */}
                             {/* {misNumeros.length == 2 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.950)).toLocaleString())} COP <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 5% {usuario?.firstDiscount && "+ 5% = 10%"}</b></b></p>} */}
@@ -669,7 +669,7 @@ const SorteoDetail = () => {
                             {/* {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>} */}
                             {/* {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>} */}
                             {/* {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>} */}
-                            <p>Total a pagar $<b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket)).toLocaleString())} COP {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
+                            <p>Total a pagar $<b>{usuario?.firstDiscount ? ((misNumeros?.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros?.length * sorteo.precioTicket)).toLocaleString())} COP {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
                             <p className="text-sm text-slate-500 mt-4 max-w-72">Al pagar se enviará un comprobante a tu correo de los números que has adquirido</p>
                         </div>
                         <div>

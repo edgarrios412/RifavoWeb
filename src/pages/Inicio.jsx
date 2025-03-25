@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from 'framer-motion';
 import { Progress } from "@/components/ui/progress"
+import mujer from "../assets/mujer.png"
 import icon from "/me2.png"
 import iphone from "/iphone.png"
 import moto from "/moto.jpg"
 import moto2 from "/moto2.png"
 import moto3 from "/moto3.png"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownToLine, BookUser, Bot, Brain, BrainCircuit, Brush, CalendarDays, CheckCircle2, Database, Dices, Fingerprint, Folder, Gift, HelpCircle, Linkedin, Mail, Search, Server, Ticket, TicketCheck } from "lucide-react";
+import { ArrowDownToLine, BookUser, Bot, Brain, BrainCircuit, Brush, CalendarDays, CheckCircle2, Database, Dices, Facebook, Fingerprint, Folder, Gift, HelpCircle, Instagram, Linkedin, Mail, Search, Server, Ticket, TicketCheck } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Lottie from 'lottie-react';
 import ani1 from '../../public/animations/1.json';
@@ -18,6 +19,9 @@ import BotAyudante from "@/components/layout/BotAyudante";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/layout/NavBar";
 import axios from "axios";
+import Apertura from "./Apertura";
+import Rifavo from "@/components/icons/branding/Rifavo";
+import RifavoLight from "@/components/icons/branding/RifavoLight";
 
 const Inicio = () => {
 
@@ -40,6 +44,40 @@ const Inicio = () => {
                 <BotAyudante />
             </Dialog> */}
             <div>
+                <div className="flex items-center justify-center sm:h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
+                    <div class="orange-blur"></div>
+                    <div class="orange-blur2 invisible lg:visible"></div>
+                    <div className="absolute xl:w-[600px] lg:w-[500px] md:w-[400px] sm:w-[300px] bottom-0 xl:-right-40 lg:-right-60 invisible lg:visible z-1">
+                        <img src={mujer} />
+                    </div>
+                    {/* <div class="orange-blur3"></div> */}
+                    <div className="flex flex-col justify-center px-8 sm:px-0 py-4 w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[40%]">
+                        <div className="relative">
+                            <div className="absolute visible dark:invisible w-72 sm:w-96 my-10">
+                                <Rifavo />
+                            </div>
+                            <div className="invisible dark:visible w-72 sm:w-96 my-10">
+                                <RifavoLight />
+                            </div>
+                        </div>
+                        <h1 className="text-4xl sm:text-6xl font-extrabold">Hoy es el día de tu <span className="font-extrabold bg-gradient-to-r from-green-500 via-green-600 to-green-500 animate-gradient-move inline-block text-transparent bg-clip-text">SUERTE</span></h1>
+                        <p className="mt-4 text text-slate-500 text-normal sm:text-lg">¡Estás a un boleto de cambiar tu vida! 🎉 En RIFAVO, cada participación es una oportunidad de ganar premios increíbles, desde tecnología de última generación hasta experiencias únicas. ¡No esperes más y únete a la emoción!</p>
+                        <div className="flex justify-between gap-5 mt-10 z-10">
+                            <p className="text-slate-500 text-sm sm:text-base">Mantente al tanto a través de nuestras redes sociales</p>
+                            <div className="flex gap-5">
+                                <a href="https://web.facebook.com/profile.php?id=61560852461961" target="_blank">
+                                    <Facebook />
+                                </a>
+                                <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
+                                    <Instagram />
+                                </a>
+                                {/* <a target="_blank">
+                            <Twitter />
+                        </a> */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="px-5 sm:px-20 lg:px-0 text-start flex flex-col-reverse pt-20 py-0 lg:py-64 lg:flex-row items-center justify-evenly min-h-[60vh]">
                     <motion.div initial={{ x: -100 }}
                         animate={{ x: 0 }}
@@ -126,7 +164,7 @@ const Inicio = () => {
                                 {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
                                 {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
                                 <div className="flex items-center justify-center">
-                                <img src={s.image[0]} className="rounded-2xl mx-0 my-6 max-h-72" />
+                                    <img src={s.image[0]} className="rounded-2xl mx-0 my-6 max-h-72" />
                                 </div>
                                 <div className="text-left px-6">
                                     <h2 className="font-bold text-lg my-2">{s.premio1}</h2>

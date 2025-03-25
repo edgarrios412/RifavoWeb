@@ -23,6 +23,7 @@ import { Separator } from "../ui/separator"
 import { Button } from "../ui/button"
 import tiktokIconDark from "/tiktok-dark.svg"
 import tiktokIconLight from "/tiktok-light.svg"
+import { useNavigate } from "react-router-dom"
 
 const Footer = () => {
 
@@ -30,6 +31,7 @@ const Footer = () => {
     // const [somos, setSomos] = useState(false)
     // const [premios, setPremios] = useState(false)
     const [politicas, setPoliticas] = useState(false)
+    const navigate = useNavigate()
 
     return (
         <>
@@ -206,6 +208,9 @@ const Footer = () => {
                             </a> */}
                             <a target="_blank">
                                 <p onClick={() => setPoliticas(true)} className="hover:underline cursor-pointer text-slate-700 dark:text-slate-400">Politicas</p>
+                            </a>
+                            <a target="_blank">
+                                <p onClick={() => navigate("/trabaja")} className="hover:underline cursor-pointer text-slate-700 dark:text-slate-400">Trabaja con nosotros</p>
                             </a>
                         </div>
                     </div>

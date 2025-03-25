@@ -27,6 +27,9 @@ import {
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import {
+    Badge
+} from "../ui/badge"
+import {
     Table,
     TableBody,
     TableCaption,
@@ -36,7 +39,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ArrowDownToLine, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users } from "lucide-react"
+import { ArrowDownToLine, Calculator, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users } from "lucide-react"
 import { DownloadTableExcel } from "react-export-table-to-excel"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
@@ -198,7 +201,7 @@ const NavBar = () => {
             title: "Campos incompletos",
             description: "La contraseña debe tener al menos 8 caracteres",
         })
-        axios.post("/user", { ...form, father: ref, firstDiscount: ref ? true : false }).then(({ data }) => {
+        axios.post("/user", { ...form, tag: ref, firstDiscount: ref ? true : false }).then(({ data }) => {
             setLogin(true)
             toast({
                 title: "Registro exitoso",
@@ -472,11 +475,11 @@ const NavBar = () => {
                         <DialogDescription>Recibe un 10% de las compras de por vida de tus referidos, y regálale un 10% de descuento de su primera compra</DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-row gap-4">
-                        <Input onChange={(e) => setTicketId(e.target.value)} value={`https://www.rifavo.com/?ref=${usuario?.id}`} placeholder="ID del ticket" />
-                        <Button onClick={() => copiarAlPortapapeles(`https://www.rifavo.com/?ref=${usuario?.id}`)}>Copiar</Button>
+                        <Input onChange={(e) => setTicketId(e.target.value)} value={`https://www.rifavo.com/?ref=${usuario?.tag}`} placeholder="ID del ticket" />
+                        <Button onClick={() => copiarAlPortapapeles(`https://www.rifavo.com/?ref=${usuario?.tag}`)}>Copiar</Button>
                     </div>
                     <div className="flex items-center justify-center p-4">
-                        <QRCode value={`https://rifavo.com/?ref=${usuario?.id}`} />
+                        <QRCode value={`https://rifavo.com/?ref=${usuario?.tag}`} />
                     </div>
                     <div className="relative">
                         <div
@@ -495,7 +498,7 @@ const NavBar = () => {
                     <DialogDescription className="text-center">Para realizar un retiro debes comunicarte con el soporte de RIFAVO</DialogDescription>
                 </DialogContent>
             </Dialog>
-            <div className="fixed w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
+            <div className="fixed top-0 left-0 right-0 w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
                 <div className="relative flex">
                     <a onClick={() => navigation("/")} className="relative">
                         <div className="absolute invisible sm:visible dark:invisible h-full w-32 sm:w-40 flex items-center">
@@ -508,6 +511,9 @@ const NavBar = () => {
                     <div className="sm:relative sm:left-52">
                         <ModeToggle />
                     </div>
+                    {/* <div onClick={() => navigation("/raspa")} className="ml-6 flex cursor-pointer justify-center items-center rounded-sm sm:relative sm:left-52 bg-gradient-to-r from-orange-500 via-red-500 to-orange-500 animate-gradient-move text-white">
+                        <p className="px-4 font-bold text-sm">Raspa y gana</p>
+                    </div> */}
                 </div>
                 {usuario ?
                     <DropdownMenu>
@@ -540,20 +546,27 @@ const NavBar = () => {
                                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
-                            {usuario.role > 0 && <a onClick={() => navigation("/panel")}><DropdownMenuGroup>
+                            {usuario.role > 0 && <a onClick={() => navigation("/ventas")}><DropdownMenuGroup>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <Calculator className="mr-2 h-4 w-4" />
+                                    <span>Vendedor </span>
+                                    {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup></a>}
+                            {usuario.role > 9 && <a onClick={() => navigation("/panel")}><DropdownMenuGroup>
                                 <DropdownMenuItem className="cursor-pointer">
                                     <Cctv className="mr-2 h-4 w-4" />
                                     <span>Administración </span>
                                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup></a>}
-                            <DropdownMenuGroup onClick={() => setIsOpen(4)}>
+                            {usuario.tag && <DropdownMenuGroup onClick={() => setIsOpen(4)}>
                                 <DropdownMenuItem className="cursor-pointer">
                                     <Users className="mr-2 h-4 w-4" />
                                     <span>Referidos</span>
                                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                                 </DropdownMenuItem>
-                            </DropdownMenuGroup>
+                            </DropdownMenuGroup>}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => { setUsuario(null); localStorage.removeItem("token") }} className="cursor-pointer hover:!bg-red-200">
                                 <LogOut className="mr-2 h-4 w-4" />

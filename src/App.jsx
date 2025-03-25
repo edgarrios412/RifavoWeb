@@ -8,6 +8,9 @@ import Footer from "./components/layout/Footer";
 import Apertura from "./pages/Apertura";
 import Panel from "./pages/Panel";
 import VerificarTicket from "./pages/VerificarTicket";
+import Raspa from "./pages/Raspa";
+import Ventas from "./pages/Ventas";
+import TrabajaConNosotros from "./pages/TrabajaConNosotros";
 
 function App() {
 
@@ -37,6 +40,9 @@ function App() {
         <Route path="/" element={<Inicio />} />
         <Route path="/sorteo/:id" element={<SorteoDetail />} />
         <Route path="/panel" element={<Panel />} />
+        <Route path="/ventas" element={<Ventas />} />
+        <Route path="/raspa" element={<Raspa />} />
+        <Route path="/trabaja" element={<TrabajaConNosotros />} />
         <Route path="/verificarTicket/:id" element={<VerificarTicket />} />
       </Routes>
       {/* <Footer/> */}
