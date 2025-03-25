@@ -44,7 +44,7 @@ const Inicio = () => {
                 <BotAyudante />
             </Dialog> */}
             <div>
-                <div className="flex items-center justify-center sm:h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
+                <div className="flex items-center justify-center h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
                     <div class="orange-blur"></div>
                     <div class="orange-blur2 invisible lg:visible"></div>
                     <div className="absolute xl:w-[600px] lg:w-[500px] md:w-[400px] sm:w-[300px] bottom-0 xl:-right-40 lg:-right-60 invisible lg:visible z-1">
