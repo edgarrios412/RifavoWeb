@@ -33,14 +33,14 @@ const SorteoDetail = () => {
     const numeros = Array.from({ length: sorteo?.cantidadTicket }, (_, index) => index);
     const [numerosComprados, setNumerosComprados] = useState([]);
     const [misNumeros, setMisNumeros] = useState([])
+    const [currentPage, setCurrentPage] = useState(1); // Página actual
+    const [numerosPorPagina] = useState(1000); // Número de elementos por página
+    const [filter, setFilter] = useState("")
     const [paymentMethod, setPaymentMethod] = useState(0)
     const [form, setForm] = useState({})
-    const [filter, setFilter] = useState("")
     const [login, setLogin] = useState(true)
     const [hayGanadores, setHayGanadores] = useState(false)
     const [invitado, setInvitado] = useState({})
-    const [currentPage, setCurrentPage] = useState(1); // Página actual
-    const [numerosPorPagina] = useState(1000); // Número de elementos por página
 
     const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 

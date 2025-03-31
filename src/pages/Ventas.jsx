@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
-import { CalendarDays, CheckCircle2, Coins, ScanFace, Ticket, Trophy, Users } from "lucide-react"
+import { CalendarDays, CheckCircle2, Coins, MessageCircleWarning, ScanFace, Ticket, Trophy, Users } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -17,6 +18,30 @@ const Ventas = () => {
     const { usuario } = useContext(UserContext)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
+
+    const [numeros, setNumeros] = useState([]);
+    const [numerosComprados, setNumerosComprados] = useState([]);
+    const [misNumeros, setMisNumeros] = useState([])
+    const [currentPage, setCurrentPage] = useState(1); // Página actual
+    const [numerosPorPagina] = useState(1000); // Número de elementos por página
+    const [filter, setFilter] = useState("")
+
+    const filteredNumeros = numeros.filter(index => index.toString().padStart(3, '0').includes(filter));
+
+    useEffect(() => {
+        if (sorteo) {
+            const numerosArray = Array.from({ length: sorteo.cantidadTicket }, (_, i) => i + 1); // Generar números del 1 al cantidadTicket
+            setNumerosComprados(sorteo.tickets.map(t => t.numero))
+            setNumeros(numerosArray);
+            setCurrentPage(1); // Reiniciar la página a 1 al cambiar el sorteo
+            setMisNumeros([])
+            setFilter("")
+        } else {
+            setNumeros([])
+            setNumerosComprados([])
+            setMisNumeros([])
+        }
+    }, [sorteo])
 
     const [form, setForm] = useState({})
 
@@ -36,6 +61,44 @@ const Ventas = () => {
         }
     }, [usuario])
 
+    const handleNumerosComprados = (index) => {
+        setMisNumeros((prevClickedIndexes) =>
+            prevClickedIndexes.includes(index)
+                ? prevClickedIndexes.filter((i) => i !== index) // Desmarcar si ya está clicado
+                : [...prevClickedIndexes, index] // Agregar al array de clicados
+        );
+    };
+
+    const handleCompra = () => {
+        axios.post("/sorteo/comprar/ticketsFisico", {
+            sorteo:{
+                sorteoId: sorteo.id,
+                tickets: misNumeros
+            },
+            user:{
+                email: form.email,
+                phone: form.phone,
+                father: usuario.id,
+            },
+            monto: (misNumeros.length * sorteo.precioTicket)*0.1,
+        }).then(() => {
+            setSorteo(null)
+            setMisNumeros([])
+            alert("Compra realizada con éxito")
+            setNumerosComprados([])
+            setNumeros([])
+        }, () => alert("Error al realizar la compra"))
+    }
+
+    // Lógica para dividir los números en páginas
+    const indexOfLastNumber = currentPage * numerosPorPagina; // Último número de la página
+    const indexOfFirstNumber = indexOfLastNumber - numerosPorPagina; // Primer número de la página
+    const currentNumbers = filteredNumeros.slice(indexOfFirstNumber, indexOfLastNumber); // Números de la página actual
+
+    // Cambiar de página
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const totalPages = Math.ceil(filteredNumeros.length / numerosPorPagina);
+
     return (
         <>
             {loading ?
@@ -54,7 +117,7 @@ const Ventas = () => {
                                     <div className="bg-orange-200 dark:bg-slate-700 w-10 h-10 rounded-[3px] flex justify-center items-center"><Coins className="text-orange-700 dark:text-orange-300" /></div>
 
                                 </div>
-                                <p className="font-extrabold text-4xl">$400,000</p>
+                                <p className="font-extrabold text-4xl">${usuario?.income}</p>
                                 <p className="text-slate-500">Contacta a un admin para recargar</p>
                             </div>
                             {/* <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
@@ -88,7 +151,7 @@ const Ventas = () => {
                                         return 1; // 'b' va antes que 'a'
                                     }
                                     return 0; // Si ambos son iguales, no hay cambio
-                                }).map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
+                                }).filter(s => !s.numTicketGanadorP1).map(s => <div className="w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-4">
                                     {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
                                     {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
                                     <div className="flex items-center justify-center">
@@ -104,15 +167,71 @@ const Ventas = () => {
                                         </div>}
                                         <p className={`${s.numTicketGanadorP1 ? "mt-10" : "mt-0"} flex items-center gap-2 font-bold mb-1`}><Ticket className="w-5 h-5" />{Number(s.precioTicket).toLocaleString()} COP</p>
                                         {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{s.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" /> Se iniciará al vender los tickets</p>}
-                                        <Button onClick={() => setSorteo(s.id)} className="my-4 justify-end">Seleccionar</Button>
+                                        <Button onClick={() => setSorteo(s)} className="my-4 justify-end">Seleccionar</Button>
                                     </div>
                                 </div>)}
                             </div> :
                                 <div>
                                     <Button onClick={() => setSorteo(null)} className="my-4 justify-end">Volver</Button>
+                                    <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
+                                    <Input type="number" placeholder="Busca tu numero ganador" onChange={(e) => { setFilter(e.target.value); setCurrentPage(1) }} />
+                                    {
+                                        !filteredNumeros.length &&
+                                        <div className="flex flex-col items-center min-w-[45rem]">
+                                            {/* <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} /> */}
+                                            <p key={1} className={`flex items-center justify-center text-center mx-auto mt-4 text-slate-500`}>
+                                                No hemos conseguido el número que estás buscando
+                                            </p>
+                                        </div>
+                                    }
+                                    <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-10 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">
+                                        {currentNumbers.map((index) => {
+                                            if (!numerosComprados.includes(index)) {
+                                                return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
+                                                    {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
+                                                </p>)
+                                            } else {
+                                                return (<p key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer bg-black text-white`}>
+                                                    {index.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
+                                                </p>)
+                                            }
+                                        })}
+                                    </div>
+                                    {/* Paginación */}
+                                    {sorteo.cantidadTicket > 1000 && <div className="flex justify-center items-center mt-6 mb-10">
+                                        <button
+                                            onClick={() => paginate(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                            className="px-4 py-2 bg-black text-white rounded-sm"
+                                        >
+                                            Anterior
+                                        </button>
+
+                                        <span className="mx-4">
+                                            Página {currentPage} de {totalPages}
+                                        </span>
+
+                                        <button
+                                            onClick={() => paginate(currentPage + 1)}
+                                            disabled={currentPage * numerosPorPagina >= filteredNumeros.length}
+                                            className="px-4 py-2 bg-black text-white rounded-sm"
+                                        >
+                                            Siguiente
+                                        </button>
+                                    </div>}
+                                    {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <MessageCircleWarning />
+                                            <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
+                                        </div>
+                                    </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <CheckCircle2 />
+                                            <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
+                                        </div>
+                                    </div>)}
                                     <Input placeholder="Correo electronico" onChange={handleForm} name="email" className="w-80 mt-4" />
                                     <Input placeholder="Telefono (opcional)" onChange={handleForm} name="phone" className="w-80 mt-4" />
-                                    <Input placeholder="Ticket numero" onChange={handleForm} name="number" className="w-80 mt-4 mb-4" />
                                     <AlertDialog>
                                         <AlertDialogTrigger><Button>Vender</Button></AlertDialogTrigger>
                                         <AlertDialogContent>
@@ -123,12 +242,14 @@ const Ventas = () => {
                                                     <br></br>
                                                     Telefono: {form.phone}
                                                     <br></br>
-                                                    Ticket: {form.number}
+                                                    Ticket: {misNumeros.toLocaleString()}
+                                                    <br></br>
+                                                    Pagar: {misNumeros.length * sorteo.precioTicket} COP
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                <AlertDialogAction>Confirmar</AlertDialogAction>
+                                                <AlertDialogAction onClick={() => handleCompra()}>Confirmar</AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
