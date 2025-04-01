@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import imgcuadrada from '../../../public/imgcuadrada.jpg';
+// import imgcuadrada from '../../../public/imgcuadrada.jpg';
  
 const Carrusel = ({imagenes}) => {
   return (

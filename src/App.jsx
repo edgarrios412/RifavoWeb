@@ -5,7 +5,6 @@ import NavBar from "./components/layout/NavBar";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./components/context/UserContext";
 import Footer from "./components/layout/Footer";
-import Apertura from "./pages/Apertura";
 import Panel from "./pages/Panel";
 import VerificarTicket from "./pages/VerificarTicket";
 import Raspa from "./pages/Raspa";

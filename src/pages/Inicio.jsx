@@ -1,32 +1,19 @@
 import { Button } from "@/components/ui/button"
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from 'framer-motion';
+import { useEffect, useState } from "react";
+import { motion } from 'framer-motion';
 import { Progress } from "@/components/ui/progress"
-import mujer from "../assets/mujer.png"
-import icon from "/me2.png"
-import iphone from "/iphone.png"
-import moto from "/moto.jpg"
-import moto2 from "/moto2.png"
-import moto3 from "/moto3.png"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownToLine, BookUser, Bot, Brain, BrainCircuit, Brush, CalendarDays, CheckCircle2, Database, Dices, Facebook, Fingerprint, Folder, Gift, HelpCircle, Instagram, Linkedin, Mail, Search, Server, Ticket, TicketCheck } from "lucide-react";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { CalendarDays, CheckCircle2, Dices, Facebook, Fingerprint, Gift, Instagram, Ticket, TicketCheck } from "lucide-react";
 import Lottie from 'lottie-react';
 import ani1 from '../../public/animations/1.json';
-import ani2 from '../../public/animations/2.json';
 import ani3 from '../../public/animations/3.json';
-import BotAyudante from "@/components/layout/BotAyudante";
+import mujer from "../assets/mujer.png"
 import { useNavigate } from "react-router-dom";
-import NavBar from "@/components/layout/NavBar";
 import axios from "axios";
-import Apertura from "./Apertura";
 import Rifavo from "@/components/icons/branding/Rifavo";
 import RifavoLight from "@/components/icons/branding/RifavoLight";
 
 const Inicio = () => {
 
-    const [option, setOption] = useState(1)
-    const [work, setWork] = useState(1)
     const navigation = useNavigate()
 
     const [sorteos, setSorteos] = useState([])
@@ -37,12 +24,6 @@ const Inicio = () => {
 
     return (
         <>
-            {/* <Dialog>
-                <DialogTrigger className="fixed bottom-5 right-5 lg:bottom-8 lg:right-8">
-                    <Button className="bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-14 h-14 lg:h-16 lg:w-16"><Bot className="w-8 h-8" /></Button>
-                </DialogTrigger>
-                <BotAyudante />
-            </Dialog> */}
             <div>
                 <div className="flex items-center justify-center h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
                     <div class="orange-blur"></div>
@@ -50,7 +31,6 @@ const Inicio = () => {
                     <div className="absolute xl:w-[600px] lg:w-[500px] md:w-[400px] sm:w-[300px] bottom-0 xl:-right-40 lg:-right-60 invisible lg:visible z-1">
                         <img src={mujer} />
                     </div>
-                    {/* <div class="orange-blur3"></div> */}
                     <div className="flex flex-col justify-center px-8 sm:px-0 py-4 w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[40%]">
                         <div className="relative">
                             <div className="absolute visible dark:invisible w-72 sm:w-96 my-10">
@@ -71,9 +51,6 @@ const Inicio = () => {
                                 <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
                                     <Instagram />
                                 </a>
-                                {/* <a target="_blank">
-                            <Twitter />
-                        </a> */}
                             </div>
                         </div>
                     </div>
@@ -82,8 +59,6 @@ const Inicio = () => {
                     <motion.div initial={{ x: -100 }}
                         animate={{ x: 0 }}
                     >
-                        {/* <h4 className="mb-4 font-bold">Participa y gana</h4> */}
-                        {/* <h1 className="text-[60px] tracking-widest">PORTFOLIO</h1> */}
                         <h1 className="text-[35px] sm:text-[45px] lg:text-[65px] max-w-[40rem] leading-none font-extrabold">Conviertete en un feliz <span className="font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-orange-500 animate-gradient-move inline-block text-transparent bg-clip-text">GANADOR</span></h1>
                         <p className="max-w-[30rem] my-4 text-slate-600 dark:text-slate-300 text-lg">Participa en nuestros sorteos y gana increibles premios <b>¿Que esperas para probar tu suerte?</b></p>
                         {sorteos.filter(s => !s.numTicketGanadorP1)?.length > 0 && <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#262635] border-l-4 border-l-orange-400 rounded-r-sm pl-4 py-3">
@@ -104,7 +79,6 @@ const Inicio = () => {
                         <div className="w-full h-full flex justify-center items-center">
                             <Lottie animationData={ani1} style={{ width: "900px" }} loop={true} />
                         </div>
-                        {/* <img src={webdev} className="absolute"/> */}
                     </motion.div>
                 </div>
                 <div className="px-0 lg:px-0 text-center flex flex-col py-20 lg:py-0 lg:flex-row items-center justify-center gap-0 lg:gap-20 max-h-fit lg:max-h-[50vh]">
@@ -138,13 +112,6 @@ const Inicio = () => {
                                 </div>
                                 <Dices className="w-8 h-8 sm:block hidden" />
                             </div>
-                            {/* <p className="text-slate-500 flex justify-end gap-1 items-center"><HelpCircle className="w-4 h-4" />Tienes más dudas?</p> */}
-                            {/* <Dialog>
-                                <DialogTrigger className="flex justify-end">
-                                    <Button className="bg-gradient-to-r from-orange-500 to-red-500"><Bot className="mr-4" />Habla con nuestro BOT</Button>
-                                </DialogTrigger>
-                                <BotAyudante />
-                            </Dialog> */}
                         </motion.div>
                     </motion.div>
                 </div>

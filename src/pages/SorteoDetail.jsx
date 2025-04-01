@@ -1,6 +1,5 @@
 import { UserContext } from "@/components/context/UserContext"
 import Carrusel from "@/components/layout/Carrusel"
-import NavBar from "@/components/layout/NavBar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,7 +7,6 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
-import ani1 from '/animations/empty.json?url';
 import winner from '/animations/winner.json?url';
 import { CalendarDays, CheckCircle2, ChevronLeft, Clover, CreditCard, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"

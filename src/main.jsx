@@ -6,7 +6,6 @@ import axios from "axios";
 import { Toaster } from "./components/ui/toaster.jsx";
 import ScrollToTop from "./utils/helpers/scrollToTop.js";
 import { UserProvider } from "./components/context/UserProvider.jsx";
-import MailDesign from "./pages/MailDesign.jsx";
 import { ThemeProvider } from "./components/theme-provider.jsx";
 
 axios.defaults.baseURL = "https://rifavoback-hjoq.onrender.com";

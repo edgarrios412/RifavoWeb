@@ -1,10 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import icon from "/me2.png"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
-import SVG from "/marca.svg"
 import Rifavo from "../icons/branding/Rifavo"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import {
@@ -18,37 +16,24 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import {
-    Badge
-} from "../ui/badge"
-import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
 import { ArrowDownToLine, Calculator, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users } from "lucide-react"
-import { DownloadTableExcel } from "react-export-table-to-excel"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
 import { Separator } from "../ui/separator"
 import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import { toast } from "../ui/use-toast"
-import { PDFDownloadLink } from "@react-pdf/renderer"
 import ReciboDePago from "../../pages/plantillas/ReciboDePago"
-// import GoogleLogin from "react-google-login"
 import { gapi } from "gapi-script"
 import { ModeToggle } from "../mode-toggle"
 import RifavoLight from "../icons/branding/RifavoLight"
