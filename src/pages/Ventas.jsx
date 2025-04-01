@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
+import { Label } from "@radix-ui/react-dropdown-menu"
 import axios from "axios"
 import { CalendarDays, CheckCircle2, Coins, MessageCircleWarning, ScanFace, Ticket, Trophy, Users } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
@@ -15,7 +16,7 @@ import { useNavigate } from "react-router-dom"
 const Ventas = () => {
     const [sorteos, setSorteos] = useState([])
     const [sorteo, setSorteo] = useState(null)
-    const { usuario } = useContext(UserContext)
+    const { usuario, updateUsuario } = useContext(UserContext)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
 
@@ -70,6 +71,10 @@ const Ventas = () => {
     };
 
     const handleCompra = () => {
+        if(form.email === undefined || form.email === "") return toast({ title: "Error", description: "Debes ingresar un correo", variant: "destructive" })
+        if (form.phone === undefined || form.phone === "") return toast({ title: "Error", description: "Debes ingresar un telefono", variant: "destructive" })
+        if (misNumeros.length < sorteo.multiplo) return toast({ title: "Error", description: `Debes seleccionar ${sorteo.multiplo} tickets`, variant: "destructive" })
+        if (misNumeros.length % sorteo.multiplo !== 0) return toast({ title: "Error", description: `Debes seleccionar tickets por multiplos de ${sorteo.multiplo}`, variant: "destructive" })
         axios.post("/sorteo/comprar/ticketsFisico", {
             sorteo:{
                 sorteoId: sorteo.id,
@@ -82,6 +87,8 @@ const Ventas = () => {
             },
             monto: (misNumeros.length * sorteo.precioTicket)*0.1,
         }).then(() => {
+            updateUsuario()
+            axios.get("/sorteo/listar/all").then(({ data }) => setSorteos(data))
             setSorteo(null)
             setMisNumeros([])
             alert("Compra realizada con éxito")
@@ -117,8 +124,8 @@ const Ventas = () => {
                                     <div className="bg-orange-200 dark:bg-slate-700 w-10 h-10 rounded-[3px] flex justify-center items-center"><Coins className="text-orange-700 dark:text-orange-300" /></div>
 
                                 </div>
-                                <p className="font-extrabold text-4xl">${usuario?.income}</p>
-                                <p className="text-slate-500">Contacta a un admin para recargar</p>
+                                <p className="font-extrabold text-4xl">${usuario?.income.toLocaleString()}</p>
+                                <p className="text-slate-500">Contacta a un admin para retirar</p>
                             </div>
                             {/* <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
                                 <div className="flex justify-between items-center">
@@ -128,7 +135,7 @@ const Ventas = () => {
                                 <p className="font-extrabold text-4xl">12</p>
                                 <p className="text-slate-500"><b>1</b> usuario(s) en linea</p>
                             </div> */}
-                            <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
+                            {/* <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
                                 <div className="flex justify-between items-center">
                                     <p className="font-semibold">Tickets vendidos</p>
                                     <div className="bg-orange-200 dark:bg-slate-700 w-10 h-10 rounded-[3px] flex justify-center items-center"><Ticket className="text-orange-700 dark:text-orange-300" /></div>
@@ -136,9 +143,9 @@ const Ventas = () => {
                                 </div>
                                 <p className="font-extrabold text-4xl">1,200</p>
                                 <p className="text-slate-500"><b>324</b> tickets vendidos en la ultima semana</p>
-                            </div>
+                            </div> */}
                         </div>
-                        <div>
+                        <div className="bg-white px-6 py-4 rounded-md mt-10 shadow-sm dark:bg-slate-800 mb-10">
                             <div className="mt-10">
                                 <h1 className="font-bold text-2xl">Vender tickets</h1>
                             </div>
@@ -230,8 +237,10 @@ const Ventas = () => {
                                             <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
                                         </div>
                                     </div>)}
-                                    <Input placeholder="Correo electronico" onChange={handleForm} name="email" className="w-80 mt-4" />
-                                    <Input placeholder="Telefono (opcional)" onChange={handleForm} name="phone" className="w-80 mt-4" />
+                                    <Label className="text-slate-500">Correo</Label>
+                                    <Input placeholder="Ingresar correo electronico" onChange={handleForm} name="email" className="w-80 mt-0 mb-4" />
+                                    <Label className="text-slate-500">Teléfono (opcional)</Label>
+                                    <Input placeholder="Ingresar teléfono" onChange={handleForm} name="phone" className="w-80 mt-0 mb-4" />
                                     <AlertDialog>
                                         <AlertDialogTrigger><Button>Vender</Button></AlertDialogTrigger>
                                         <AlertDialogContent>
@@ -242,9 +251,10 @@ const Ventas = () => {
                                                     <br></br>
                                                     Telefono: {form.phone}
                                                     <br></br>
-                                                    Ticket: {misNumeros.toLocaleString()}
+                                                    Ticket(s): {misNumeros.map(n => n.toString().padStart(sorteo.cantidadTicket.toString().length-1, '0')).join(", ")}
                                                     <br></br>
-                                                    Pagar: {misNumeros.length * sorteo.precioTicket} COP
+                                                    <br></br>
+                                                    A pagar: {(misNumeros.length * sorteo.precioTicket).toLocaleString()} COP
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -292,6 +302,7 @@ const Ventas = () => {
                             </Tabs> */}
                             {/* <p className="invisible">Hola</p> */}
                         </div>
+                        <h1 className="mt-10 invisible">a</h1>
                     </div>
                 </div>}
         </>
