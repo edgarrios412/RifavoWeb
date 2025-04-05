@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       fontFamily: {
         geist: ['GeistSans', 'sans-serif'], // define la fuente
+        bai: ['BaiJamjuree', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

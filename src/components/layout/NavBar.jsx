@@ -561,7 +561,9 @@ const NavBar = () => {
                         </DropdownMenuContent>
                     </DropdownMenu> : <Dialog>
                         <DialogTrigger>
-                            <Button className="bg-gradient-to-r dark:text-white color-white from-orange-500 to-red-500">Ingresa ahora</Button>
+                        <Button className="bg-gradient-to-r from-orange-500 to-red-500 text-white dark:text-white hover:from-orange-600 hover:to-red-600 hover:shadow-lg transition-all duration-300">
+    Ingresa ahora
+  </Button>
                         </DialogTrigger>
                         {login ? (recovery ? <DialogContent>
                             <DialogHeader>

@@ -1,6 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BaiJamjuree';
+  src: url('./assets/fonts/BaiJamjuree/BaiJamjuree-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+
+body {
+  @apply font-bai;
+}
  
 @keyframes gradient {
   0%, 100% {
@@ -106,12 +171,12 @@
 /* Estilos para Firefox */
 
 
-body {
+/* body {
   font-family: CIBFont;
   color: white;
   font-family: "GeistSans";
   background-color: black;
-}
+} */
 
 .scroll-container {
   height: 100vh;

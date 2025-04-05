@@ -104,7 +104,7 @@ const Footer = () => {
                     <p>Si necesitas ayuda tenemos habilitado una línea de atención al usuario a través de nuestro correo eléctronico <b>atencionalcliente@rifavo.com</b><br></br><br></br>Contáctanos e indicanos en qué podemos ayudarte</p>
                 </DialogContent>
             </Dialog>
-            <footer>
+            <footer className="shadow-inner">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-20 justify-center px-20 py-10 mx-auto">
                     <a href="/" className="relative">
                         <div className="absolute visible dark:invisible h-full w-32 sm:w-40 flex items-center">
@@ -117,26 +117,26 @@ const Footer = () => {
                     <div className="">
                         <p className="font-bold">Redes sociales</p>
                         <div className="flex gap-5 mt-3">
-                            <a href="https://web.facebook.com/profile.php?id=61560852461961" target="_blank">
+                            <a className="hover:scale-110 hover:text-primary transition-all" href="https://web.facebook.com/profile.php?id=61560852461961" target="_blank">
                                 <Facebook />
                             </a>
-                            <a href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
+                            <a className="hover:scale-110 hover:text-primary transition-all" href="https://www.instagram.com/sorteos_rifavo/" target="_blank">
                                 <Instagram />
                             </a>
                             <a href="https://www.tiktok.com/@rifavo" target="_blank" className="-mt-[1px]">
-                                <img
+                                <img 
                                     src={tiktokIconDark}
                                     alt="Icono de TikTok"
                                     width="27"
                                     height="27"
-                                    className="dark:hidden" // Oculta el icono claro en modo oscuro
+                                    className="dark:hidden hover:scale-110 hover:text-primary transition-all" // Oculta el icono claro en modo oscuro
                                 />
                                 <img
                                     src={tiktokIconLight}
                                     alt="Icono de TikTok"
                                     width="27"
                                     height="27"
-                                    className="hidden dark:block" // Muestra el icono oscuro solo en modo oscuro
+                                    className="hidden dark:block hover:scale-110 hover:text-primary transition-all" // Muestra el icono oscuro solo en modo oscuro
                                 />
                             </a>
                             {/* <a target="_blank">
@@ -230,6 +230,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="px-20 mb-10">
+                <p className="text-slate-600 text-sm flex gap-1 items-center font-bold mb-2"> Version 1.0.0</p>
                     <p className="text-slate-500 text-sm flex gap-1 items-center"><Copyright className="w-4 h-4" /> Todos los derechos reservados por RIFAVO</p>
                 </div>
             </footer>
