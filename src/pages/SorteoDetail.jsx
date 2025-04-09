@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
 import axios from "axios"
 import winner from '/animations/winner.json?url';
-import { CalendarDays, CheckCircle2, ChevronLeft, Clover, CreditCard, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
+import { CalendarDays, CheckCircle2, ChevronLeft, Clover, CreditCard, Dices, Flower, MessageCircleWarning, Ticket, TicketX, Trophy } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Lottie from "lottie-react"
@@ -295,6 +295,24 @@ const SorteoDetail = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const totalPages = Math.ceil(filteredNumeros.length / numerosPorPagina);
 
+    const clicSuerte = () => {
+        const disponibles = filteredNumeros.filter(
+            (n) => !numerosComprados.includes(n) && !misNumeros.includes(n)
+        );
+    
+        if (disponibles.length === 0) {
+            alert("No quedan números disponibles.");
+            return;
+        }
+    
+        // Elegir un número aleatorio de los disponibles
+        const randomIndex = Math.floor(Math.random() * disponibles.length);
+        const randomNumber = disponibles[randomIndex];
+    
+        // Agregarlo a tu lista de números
+        setMisNumeros([...misNumeros, randomNumber]);
+    }
+
     return (
         <>
             <Dialog open={hayGanadores} onOpenChange={setHayGanadores}>
@@ -306,7 +324,7 @@ const SorteoDetail = () => {
                     <div className="flex items-center my-10">
                         <Lottie animationData={winner} style={{ width: "200px", marginTop: "10px" }} loop={false} />
                         <div>
-                            <p className="font-extrabold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 ¡Premio Mayor!
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
@@ -331,7 +349,7 @@ const SorteoDetail = () => {
                                 </HoverCardContent>
                             </HoverCard></p>
                             <Separator className="mt-2 mb-3" />
-                            <p className="font-extrabold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Segundo premio
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
@@ -356,7 +374,7 @@ const SorteoDetail = () => {
                                 </HoverCardContent>
                             </HoverCard></p>
                             <Separator className="mt-2 mb-3" />
-                            <p className="font-extrabold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Tercer premio
                             </p>
                             <p className="mt-2">Número ganador <HoverCard>
@@ -412,7 +430,7 @@ const SorteoDetail = () => {
                 <div className="flex flex-col lg:flex-row items-stretch justify-center gap-20 mb-10">
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-500 border border-transparent transition cursor-pointer">
                         <div>
-                            <p className="font-extrabold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 ¡Premio Mayor!
                             </p>
                             <h2 className="font-bold text-lg my-2">{sorteo.premio1}</h2>
@@ -446,7 +464,7 @@ const SorteoDetail = () => {
                     </div>
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-gray-500 border border-transparent cursor-pointer transition">
                         <div>
-                            <p className="font-extrabold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Segundo premio
                             </p>
                             <h2 className="font-bold text-lg my-2">{sorteo.premio2}</h2>
@@ -480,7 +498,7 @@ const SorteoDetail = () => {
                     </div>
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-900 border border-transparent cursor-pointer transition">
                         <div>
-                            <p className="font-extrabold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
+                            <p className="font-bold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Tercer premio
                             </p>
                             <h2 className="font-bold text-lg my-2">{sorteo.premio3}</h2>
@@ -549,7 +567,7 @@ const SorteoDetail = () => {
                         })}
                     </div>
                     {/* Paginación */}
-                    {sorteo.cantidadTicket > 1000 && <div className="flex justify-center items-center mt-6 mb-10">
+                    {sorteo.cantidadTicket > 1000 && <div className="flex justify-center items-center mt-6 mb-0">
                         <button
                             onClick={() => paginate(currentPage - 1)}
                             disabled={currentPage === 1}
@@ -571,19 +589,28 @@ const SorteoDetail = () => {
                             Siguiente
                         </button>
                     </div>}
-                    {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                        {/* <img src={discount} className="h-28"/> */}
+                    {/* {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
                         <div className="flex items-center justify-center gap-2">
                             <MessageCircleWarning />
                             <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
                         </div>
                     </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                        {/* <img src={discount} className="h-28"/> */}
                         <div className="flex items-center justify-center gap-2">
                             <CheckCircle2 />
                             <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
                         </div>
-                    </div>)}
+                    </div>)} */}
+                    
+                    <div className="flex gap-4 items-center mt-10">
+                    <p className="font-bold">Tus numeros</p>
+                    <Button onClick={clicSuerte} className="h-8 flex gap-2"><Dices className="w-4"/> Clic de la suerte</Button>
+                    <b className="text-slate-600 font-normal">{sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? `(Necesitas seleccionar ${sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más)`:""}</b>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-4 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">
+                    {misNumeros.map(m => <p onClick={() => handleNumerosComprados(m)} key={m} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(m) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
+                                    {m.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
+                                </p>)}
+                    </div>
                     {/* PAGOS */}
                     {!usuario && <><Separator className="mt-6" />
                         <div className="mt-6 flex flex-col lg:flex-row justify-between">
@@ -667,7 +694,7 @@ const SorteoDetail = () => {
                             {/* {misNumeros.length == 4 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.900)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10% {usuario?.firstDiscount && "+ 5% = 15%"}</b></b></p>} */}
                             {/* {misNumeros.length == 5 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.825)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.875)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 12.5% {usuario?.firstDiscount && "+ 5% = 17.5%"}</b></b></p>} */}
                             {/* {misNumeros.length >= 6 &&<p>Total a pagar <b>{usuario?.firstDiscount ? ((misNumeros.length * sorteo.precioTicket * 0.800)).toLocaleString() : (((misNumeros.length * sorteo.precioTicket * 0.850)).toLocaleString())} COP<b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 15% {usuario?.firstDiscount && "+ 5% = 20%"}</b></b></p>} */}
-                            <p>Total a pagar $<b>{usuario?.firstDiscount ? ((misNumeros?.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros?.length * sorteo.precioTicket)).toLocaleString())} COP {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
+                            <p>Total a pagar <b>${usuario?.firstDiscount ? ((misNumeros?.length * sorteo.precioTicket * 0.9)).toLocaleString() : (((misNumeros?.length * sorteo.precioTicket)).toLocaleString())} COP {usuario?.firstDiscount && <b className="ml-2 text-sm bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 animate-gradient-move px-4 py-1 rounded-[6px] text-white">Descuento 10%</b>}</b></p>
                             <p className="text-sm text-slate-500 mt-4 max-w-72">Al pagar se enviará un comprobante a tu correo de los números que has adquirido</p>
                         </div>
                         <div>

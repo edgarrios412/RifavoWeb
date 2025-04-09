@@ -11,6 +11,27 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Rifavo from "@/components/icons/branding/Rifavo";
 import RifavoLight from "@/components/icons/branding/RifavoLight";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+const responsive = {
+    superLargeDesktop: {
+        // the naming can be any, depends on you.
+        breakpoint: { max: 4000, min: 3000 },
+        items: 1
+    },
+    desktop: {
+        breakpoint: { max: 3000, min: 1024 },
+        items: 1
+    },
+    tablet: {
+        breakpoint: { max: 1024, min: 464 },
+        items: 1
+    },
+    mobile: {
+        breakpoint: { max: 464, min: 0 },
+        items: 1
+    }
+};
 
 const Inicio = () => {
 
@@ -33,15 +54,48 @@ const Inicio = () => {
 
     const item = {
         hidden: { opacity: 0, y: 30 },
-        show: { opacity: 1, y: 0, transition: {
-            duration: 0.5,
-            ease: [0.43, 0.13, 0.23, 0.96],
-          } },
+        show: {
+            opacity: 1, y: 0, transition: {
+                duration: 0.5,
+                ease: [0.43, 0.13, 0.23, 0.96],
+            }
+        },
     };
+
+    const pages = [
+        // {title: "Inicio", subtitle:"¡Un sorteo a otro nivel! Participa por un kit de productos Apple con valor total de $230,000", image:"https://content.sorteostec.org/sites/default/files/2025-04/Slider-6%C2%B0-Sorteo-Gana-Ya%5B45%5D.webp", path: "/"},
+        {subtitle:"¡Un sorteo a otro nivel! Participa por un kit de productos Apple con valor total de $230,000", image:"https://content.sorteostec.org/sites/default/files/2025-04/Slider%2030%C2%B0%20Sorteo%20AventuraT%20%2820_-4x3%2906.webp", path: "/sorteo/1"}]
 
     return (
         <>
             <div>
+                <Carousel swipeable={false}
+  draggable={true}
+  showDots={true}
+  responsive={responsive}
+  ssr={true} // means to render carousel on server-side.
+  infinite={true}
+//   autoPlay={true}
+  autoPlaySpeed={1000}
+  keyBoardControl={true}
+//   customTransition="all .5"
+  transitionDuration={5000}
+//   containerClass="carousel-container"
+  removeArrowOnDeviceType={["tablet", "mobile"]}
+//   deviceType={this.props.deviceType}
+//   dotListClass="custom-dot-list-style"
+//   itemClass="carousel-item-padding-90-px"
+  className="w-full h-[70vh] mt-20" >
+    {pages.map((p => <div key={p.path} className="w-full h-[70vh] bg-red-500 flex items-center justify-center text-white text-3xl">
+        <img src={p.image} className="w-full h-full absolute z-10" />
+        <div className="absolute w-full h-full bg-black opacity-30 z-20"></div>
+        <div className="flex flex-col items-center justify-center z-30">
+        {p.title && <p className="block font-bold text-4xl">{p.title}</p>}
+        {p.subtitle && <p className="mt-6 block items-center text-xl font-semibold w-2/3 text-center">{p.subtitle}</p>}
+        {p.path && <Button onClick={() => navigation(p.path)} className="mt-10 text-sm sm:text-lg lg:text-xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-7 bg-gradient-to-r from-orange-500 to-red-500 dark:text-white"><TicketCheck className="mr-2 w-5 h-5" />Participa ahora</Button>}
+        </div>
+    </div>))}
+                </Carousel>
                 <div className="flex items-center justify-center h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
                     <div class="orange-blur"></div>
                     <div class="orange-blur2 invisible lg:visible"></div>
@@ -119,7 +173,7 @@ const Inicio = () => {
                                     return 1; // 'b' va antes que 'a'
                                 }
                                 return 0; // Si ambos son iguales, no hay cambio
-                            }).map((s,i) => <motion.div key={i} variants={item} onClick={() => navigation(`/sorteo/${s.id}`)} className="cursor-pointer hover:shadow-xl transition-all w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-10">
+                            }).map((s, i) => <motion.div key={i} variants={item} onClick={() => navigation(`/sorteo/${s.id}`)} className="cursor-pointer hover:shadow-xl transition-all w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-10">
                                 {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
                                 {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
                                 <div className="flex items-center justify-center">
