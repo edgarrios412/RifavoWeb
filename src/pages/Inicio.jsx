@@ -206,7 +206,7 @@ const Inicio = () => {
                             initial="hidden"
                             whileInView="show"
                             viewport={{ once: true, amount: 0.3 }} className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-20">
-                            {sorteos.sort((a, b) => {
+                            {sorteos.filter(s => s.isPublic).sort((a, b) => {
                                 if (a.numTicketGanadorP1 === null && b.numTicketGanadorP1 !== null) {
                                     return -1; // 'a' va antes que 'b'
                                 }
@@ -214,7 +214,7 @@ const Inicio = () => {
                                     return 1; // 'b' va antes que 'a'
                                 }
                                 return 0; // Si ambos son iguales, no hay cambio
-                            }).map((s, i) => <motion.div key={i} variants={item} onClick={() => navigation(`/sorteo/${s.id}`)} className="cursor-pointer hover:shadow-xl transition-all w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-10">
+                            }).sort((a,b) => a.priority - b.priority).map((s, i) => <motion.div key={i} variants={item} onClick={() => navigation(`/sorteo/${s.id}`)} className="cursor-pointer hover:shadow-xl transition-all w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-10">
                                 {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
                                 {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
                                 <div className="flex items-center justify-center">
