@@ -485,7 +485,7 @@ const NavBar = () => {
             </Dialog>
             <div className="fixed top-0 left-0 right-0 w-full h-20 flex items-center px-10 lg:px-40 justify-between bg-white dark:bg-[#262635] bg-opacity-95 z-10">
                 <div className="relative flex">
-                    <a onClick={() => navigation("/")} className="relative">
+                    <a onClick={() => navigation("/")} className="relative cursor-pointer">
                         <div className="absolute invisible sm:visible dark:invisible h-full w-32 sm:w-40 flex items-center">
                             <Rifavo />
                         </div>

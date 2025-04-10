@@ -115,7 +115,7 @@ const Ventas = () => {
                 </div> :
                 <div className="bg-slate-100 dark:bg-background">
                     <div className="w-2/3 m-auto min-h-[100vh] h-full pt-40 ">
-                        <h1 className="mb-1 font-extrabold text-xl">Hola, Edgar 👋</h1>
+                        <h1 className="mb-1 font-bold text-xl">Hola, Edgar 👋</h1>
                         <h1 className="mb-6 text-slate-600 dark:text-slate-400">Te damos la bienvenida al panel de ventas de RIFAVO, desde acá puedes vender tickets de forma fisica.</h1>
                         <div className="w-full grid grid-cols-3 justify-center gap-10">
                             <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
@@ -124,7 +124,7 @@ const Ventas = () => {
                                     <div className="bg-orange-200 dark:bg-slate-700 w-10 h-10 rounded-[3px] flex justify-center items-center"><Coins className="text-orange-700 dark:text-orange-300" /></div>
 
                                 </div>
-                                <p className="font-extrabold text-4xl">${usuario?.income.toLocaleString()}</p>
+                                <p className="font-bold text-4xl">${usuario?.income.toLocaleString()}</p>
                                 <p className="text-slate-500">Contacta a un admin para retirar</p>
                             </div>
                             {/* <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">

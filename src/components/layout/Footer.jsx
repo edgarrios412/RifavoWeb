@@ -101,7 +101,7 @@ const Footer = () => {
                     <DialogHeader>
                         <DialogTitle>Solicitar soporte</DialogTitle>
                     </DialogHeader>
-                    <p>Si necesitas ayuda tenemos habilitado una línea de atención al usuario a través de nuestro correo eléctronico <b>atencionalcliente@rifavo.com</b><br></br><br></br>Contáctanos e indicanos en qué podemos ayudarte</p>
+                    <p>Si necesitas ayuda tenemos habilitado una línea de atención al usuario a través de nuestro correo eléctronico <b>contacto@rifavo.com</b><br></br><br></br>Contáctanos e indicanos en qué podemos ayudarte</p>
                 </DialogContent>
             </Dialog>
             <footer className="shadow-inner">

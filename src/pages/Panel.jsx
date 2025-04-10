@@ -36,7 +36,7 @@ const Panel = () => {
                 </div> :
                 <div className="bg-slate-100 dark:bg-background">
                     <div className="w-2/3 m-auto min-h-[100vh] h-full pt-40 ">
-                        <h1 className="mb-1 font-extrabold text-xl">Hola, Edgar 👋</h1>
+                        <h1 className="mb-1 font-bold text-xl">Hola, Edgar 👋</h1>
                         <h1 className="mb-6 text-slate-600 dark:text-slate-400">Te damos la bienvenida al panel administrativo de RIFAVO, desde acá puedes gestionar los sorteos, monitorear las ventas y más.</h1>
                         <div className="w-full grid grid-cols-3 justify-center gap-10">
                             <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
@@ -45,7 +45,7 @@ const Panel = () => {
                                     <div className="bg-orange-200 dark:bg-slate-700 w-10 h-10 rounded-[3px] flex justify-center items-center"><Trophy className="text-orange-700 dark:text-orange-300" /></div>
 
                                 </div>
-                                <p className="font-extrabold text-4xl">4</p>
+                                <p className="font-bold text-4xl">4</p>
                                 <p className="text-slate-500"><b>2</b> sorteos activos</p>
                             </div>
                             <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">

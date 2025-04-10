@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { obfuscateEmail, obfuscateName } from "@/utils/helpers/obfuscated"
 import discount from "/discount.png"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const SorteoDetail = () => {
     const { id } = useParams()
@@ -407,16 +408,19 @@ const SorteoDetail = () => {
             <div className="text-start mt-20 flex flex-col py-24 px-10 lg:px-0 lg:py-0 lg:flex-row items-center justify-center gap-10 lg:gap-40 min-h-[60vh]">
                 <Carrusel imagenes={sorteo?.image?.length > 1 ? [...sorteo.image] : [sorteo.image]} />
                 <div className="max-w-96">
-                    <h2 className="font-bold text-xl my-2 flex gap-4 items-center"><Button onClick={() => navigate("/")} className="flex gap-2"><ChevronLeft className="w-5 h-5" />Volver</Button> {sorteo.premio1}</h2>
-                    <p className="text-slate-500 mb-2">{sorteo.desc}</p>
+                    <div className="flex gap-4 items-center">
+                <Button onClick={() => navigate("/")} className="flex gap-2"><ChevronLeft className="w-5 h-5" />Volver</Button>
+                {sorteo.premio1 ? <h2 className="font-bold text-xl my-2 flex gap-4 items-center"> {sorteo.premio1}</h2> : <Skeleton className="w-[150px] h-[30px] rounded-md"/>}
+                        </div>
+                    {sorteo.desc ? <p className="text-slate-500 mb-2">{sorteo.desc}</p> : <Skeleton className="w-[350px] h-[50px] rounded-md mt-2"/>}
                     {!sorteo.numTicketGanadorP1 && <div className="items-center justify-between my-4">
                         <Progress value={(sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6) > 100 ? 100 : (sorteo?.tickets?.length * 100) / (sorteo?.cantidadTicket * 0.6)} className="w-[60%] mb-1" />
                         {sorteo?.cantidadTicket * 0.6 > sorteo?.tickets?.length ? <p className="text-sm text-slate-500">Faltan <b>{(sorteo.cantidadTicket * 0.6) - sorteo.tickets.length}</b> tickets para iniciar</p>
                             : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4" />Sorteo listo para empezar!</p>}
                     </div>}
-                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />{Number(sorteo.precioTicket).toLocaleString()} COP/ticket</p>
-                    <p className="text-slate-500 flex items-center gap-2"><TicketX className="dark:text-white text-black w-5 h-5" /> Tus tickets deben ser multiplo de <b>{sorteo.multiplo}</b></p>
-                    <p className="text-slate-500 flex items-center gap-2"><Clover className="dark:text-white text-black w-5 h-5" /> Tienes <b>x{sorteo.multiplo*3} oportunidades de ganar</b></p>
+                    <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />{sorteo.desc ? Number(sorteo.precioTicket).toLocaleString()+" COP/ticket" : <Skeleton className="w-[200px] h-[20px] rounded-md"/>}</p>
+                    <p className="text-slate-500 flex items-center gap-2"><TicketX className="dark:text-white text-black w-5 h-5" /> Tus tickets deben ser multiplo de <b>{sorteo.multiplo ?? 1}</b></p>
+                    <p className="text-slate-500 flex items-center gap-2"><Clover className="dark:text-white text-black w-5 h-5" /> Tienes <b>x{sorteo.multiplo ? sorteo.multiplo*3 : 1} oportunidades de ganar</b></p>
                     {sorteo.fechaSorteo ? <p className="text-slate-500 flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{sorteo.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays className="dark:text-white text-black w-5 h-5" /> Se iniciará al vender los tickets</p>}
                     <div className="mt-10 text-sm">
                         <p className="font-bold mb-2">Terminos y condiciones</p>
@@ -426,15 +430,17 @@ const SorteoDetail = () => {
             </div>
             {/* PREMIOS */}
             <div className="text-start flex items-center justify-center bg-slate-50 dark:bg-[#14141A] py-6 flex-col">
-                <h2 className="text-[30px] sm:text-[35px] lg:text-[40px] mb-6 font-extrabold">Premios</h2>
+                <h2 className="text-[30px] sm:text-[35px] lg:text-[40px] mb-6 font-bold">Premios</h2>
                 <div className="flex flex-col lg:flex-row items-stretch justify-center gap-20 mb-10">
                     <div className="flex flex-col justify-between max-w-56 bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 rounded-lg p-4 shadow-md hover:border-yellow-500 border border-transparent transition cursor-pointer">
                         <div>
                             <p className="font-bold text-white bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 ¡Premio Mayor!
                             </p>
-                            <h2 className="font-bold text-lg my-2">{sorteo.premio1}</h2>
-                            <p className="text-slate-500 mb-2">{sorteo.mindescP1}</p>
+                            {sorteo.premio1 ? <>
+                                <h2 className="font-bold text-lg my-2">{sorteo.premio1}</h2>
+                                <p className="text-slate-500 mb-2">{sorteo.mindescP1}</p>
+                            </>: <Skeleton className="my-2 w-[200px] h-[80px] rounded-md"/>}
                         </div>
                         <div>
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería de Boyacá</p>
@@ -467,8 +473,10 @@ const SorteoDetail = () => {
                             <p className="font-bold text-white bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Segundo premio
                             </p>
-                            <h2 className="font-bold text-lg my-2">{sorteo.premio2}</h2>
-                            <p className="text-slate-500 mb-2">{sorteo.mindescP2}</p>
+                            {sorteo.premio2 ? <>
+                                <h2 className="font-bold text-lg my-2">{sorteo.premio2}</h2>
+                                <p className="text-slate-500 mb-2">{sorteo.mindescP2}</p>
+                            </>: <Skeleton className="my-2 w-[200px] h-[80px] rounded-md"/>}
                         </div>
                         <div>
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería Cauca</p>
@@ -501,8 +509,10 @@ const SorteoDetail = () => {
                             <p className="font-bold text-white bg-gradient-to-r from-yellow-900 via-yellow-700 to-yellow-900 animate-gradient-move w-fit px-3 py-1 rounded-sm">
                                 Tercer premio
                             </p>
-                            <h2 className="font-bold text-lg my-2">{sorteo.premio3}</h2>
-                            <p className="text-slate-500 mb-2">{sorteo.mindescP3}</p>
+                            {sorteo.premio3 ? <>
+                                <h2 className="font-bold text-lg my-2">{sorteo.premio3}</h2>
+                                <p className="text-slate-500 mb-2">{sorteo.mindescP3}</p>
+                            </>: <Skeleton className="my-2 w-[200px] h-[80px] rounded-md"/>}
                         </div>
                         <div>
                             <p className="flex items-center gap-2 font-bold mb-1"><Ticket className="w-5 h-5" />Lotería Pijao Noche</p>
@@ -603,7 +613,7 @@ const SorteoDetail = () => {
                     
                     <div className="flex gap-4 items-center mt-10">
                     <p className="font-bold">Tus numeros</p>
-                    <Button onClick={clicSuerte} className="h-8 flex gap-2"><Dices className="w-4"/> Clic de la suerte</Button>
+                    <Button onClick={clicSuerte} className="h-8 flex gap-2 bg-gradient-to-r from-green-600 via-green-500 to-green-600 animate-gradient-move"><Dices className="w-4"/> Clic de la suerte</Button>
                     <b className="text-slate-600 font-normal">{sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? `(Necesitas seleccionar ${sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más)`:""}</b>
                     </div>
                     <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-4 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">

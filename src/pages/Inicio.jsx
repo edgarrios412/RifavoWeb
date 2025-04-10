@@ -13,6 +13,8 @@ import Rifavo from "@/components/icons/branding/Rifavo";
 import RifavoLight from "@/components/icons/branding/RifavoLight";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import useCountdown from "@/utils/helpers/useCountdown";
+import { Separator } from "@/components/ui/separator";
 const responsive = {
     superLargeDesktop: {
         // the naming can be any, depends on you.
@@ -62,40 +64,79 @@ const Inicio = () => {
         },
     };
 
+    const [s, m, h, d] = useCountdown(new Date(2025, 3, 22))
+
     const pages = [
-        // {title: "Inicio", subtitle:"¡Un sorteo a otro nivel! Participa por un kit de productos Apple con valor total de $230,000", image:"https://content.sorteostec.org/sites/default/files/2025-04/Slider-6%C2%B0-Sorteo-Gana-Ya%5B45%5D.webp", path: "/"},
-        {subtitle:"¡Un sorteo a otro nivel! Participa por un kit de productos Apple con valor total de $230,000", image:"https://content.sorteostec.org/sites/default/files/2025-04/Slider%2030%C2%B0%20Sorteo%20AventuraT%20%2820_-4x3%2906.webp", path: "/sorteo/1"}]
+        { color1: "#584895", color2: "#06b2c6", subtitle: "Participa ahora y gana una TVS Apache RTR 200 4V ¿Que esperas?", image: "https://media.autecomobility.com/recursos/marcas/tvs/apache-rtr-200-4v/interna-de-producto/APACHE-200-4V-BANNER-DESKTOP.jpg", path: "/sorteo/1" },
+        { color1: "#f97316", color2: "#ef4444", subtitle: "¡Un sorteo a otro nivel! Participa por un kit de productos Apple con valor total de $230,000", image: "https://content.sorteostec.org/sites/default/files/2025-04/Slider%2030%C2%B0%20Sorteo%20AventuraT%20%2820_-4x3%2906.webp", path: "/sorteo/1" }]
 
     return (
         <>
             <div>
                 <Carousel swipeable={false}
-  draggable={true}
-  showDots={true}
-  responsive={responsive}
-  ssr={true} // means to render carousel on server-side.
-  infinite={true}
-//   autoPlay={true}
-  autoPlaySpeed={1000}
-  keyBoardControl={true}
-//   customTransition="all .5"
-  transitionDuration={5000}
-//   containerClass="carousel-container"
-  removeArrowOnDeviceType={["tablet", "mobile"]}
-//   deviceType={this.props.deviceType}
-//   dotListClass="custom-dot-list-style"
-//   itemClass="carousel-item-padding-90-px"
-  className="w-full h-[70vh] mt-20" >
-    {pages.map((p => <div key={p.path} className="w-full h-[70vh] bg-red-500 flex items-center justify-center text-white text-3xl">
-        <img src={p.image} className="w-full h-full absolute z-10" />
-        <div className="absolute w-full h-full bg-black opacity-30 z-20"></div>
-        <div className="flex flex-col items-center justify-center z-30">
-        {p.title && <p className="block font-bold text-4xl">{p.title}</p>}
-        {p.subtitle && <p className="mt-6 block items-center text-xl font-semibold w-2/3 text-center">{p.subtitle}</p>}
-        {p.path && <Button onClick={() => navigation(p.path)} className="mt-10 text-sm sm:text-lg lg:text-xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-7 bg-gradient-to-r from-orange-500 to-red-500 dark:text-white"><TicketCheck className="mr-2 w-5 h-5" />Participa ahora</Button>}
-        </div>
-    </div>))}
+                    draggable={true}
+                    showDots={true}
+                    responsive={responsive}
+                    ssr={true} // means to render carousel on server-side.
+                    infinite={true}
+                    autoPlay={true}
+                    autoPlaySpeed={1000}
+                    keyBoardControl={true}
+                    //   customTransition="all .5"
+                    transitionDuration={5000}
+                    //   containerClass="carousel-container"
+                    removeArrowOnDeviceType={["tablet", "mobile"]}
+                    //   deviceType={this.props.deviceType}
+                    //   dotListClass="custom-dot-list-style"
+                    //   itemClass="carousel-item-padding-90-px"
+                    className="w-full h-[70vh] mt-20" >
+                    {pages.map((p => <div key={p.path} className="w-full h-[71vh] flex items-center justify-center text-white text-3xl">
+                        <img src={p.image} className="w-full h-full absolute z-10" />
+                        <div className="absolute w-full h-full bg-black opacity-40 z-20"></div>
+                        <motion.div initial={{ y: 50, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                            viewport={{ once: false, amount: 0.3 }} className="flex flex-col items-center justify-center z-30">
+                            {p.title && <p className="block font-bold text-5xl">{p.title}</p>}
+                            {p.subtitle && <p className="mt-6 block items-center text-2xl font-semibold w-2/3 text-center drop-shadow-[1px_2px_0_black]">{p.subtitle}</p>}
+                            {p.path && <Button style={{
+  backgroundImage: `linear-gradient(to right, ${p.color1}, ${p.color2})`
+}} onClick={() => navigation(p.path)} className={`mt-10 text-sm sm:text-lg lg:text-xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-7 dark:text-white font-semibold`}><TicketCheck className="mr-2 w-5 h-5" />Participa ahora</Button>}
+                        </motion.div>
+                    </div>))}
                 </Carousel>
+                <div className="px-96 py-8 bg-slate-100 dark:bg-[#262635] flex gap-10">
+                    <div>
+                        <p className="font-semibold text-slate-900 dark:text-white uppercase text-sm mb-1">Próximo sorteo</p>
+                        <div onClick={() => navigation("/sorteo/1")} className="w-60 h-32 bg-white dark:bg-[#14141a] rounded-md shadow-md cursor-pointer hover:shadow-xl transition-all">
+                            <div className="h-1/2 rounded-t-md flex items-center justify-between px-5">
+                                <div className="w-1/4 flex flex-col items-center justify-center">
+                                    <p className="font-bold">{d}</p>
+                                    <p className="text-slate-600 text-xs">DIAS</p>
+                                </div>
+                                <div className="w-1/4 flex flex-col items-center justify-center">
+                                    <p className="font-bold">{d}</p>
+                                    <p className="text-slate-600 text-xs">HR</p>
+                                </div>
+                                <div className="w-1/4 flex flex-col items-center justify-center">
+                                    <p className="font-bold">{m}</p>
+                                    <p className="text-slate-600 text-xs">MIN</p>
+                                </div>
+                                <div className="w-1/4 flex flex-col items-center justify-center">
+                                    <p className="font-bold">{s}</p>
+                                    <p className="text-slate-600 text-xs">SEG</p>
+                                </div>
+                            </div>
+                            <div className="h-1/2 bg-gradient-to-r from-[#ee7d0a] via-[#d75556] to-[#c02da0] rounded-b-md flex items-center justify-center">
+                                <p className="font-bold text-sm text-white uppercase">Ver sorteo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <Separator className="h-40 dark:bg-[#1f1f29]" orientation="vertical" />
+                    <div className="flex items-center justify-center flex-col">
+                        {/* <p className="text-slate-600">En construccion...</p> */}
+                    </div>
+                </div>
                 <div className="flex items-center justify-center h-[100vh] overflow-x-hidden relative overflow-hidden select-none">
                     <div class="orange-blur"></div>
                     <div class="orange-blur2 invisible lg:visible"></div>
@@ -159,7 +200,7 @@ const Inicio = () => {
                 </div>
                 <div id="sorteos" className="text-center flex items-center justify-evenly min-h-[100vh] h-fit bg-slate-50 dark:bg-[#14141A] mt-0 py-20">
                     <div>
-                        <h1 className="text-[30px] sm:text-[35px] lg:text-[45px] mb-20 font-bold text-slate-800">Rifas activas</h1>
+                        <h1 className="text-[30px] sm:text-[35px] lg:text-[45px] mb-20 font-bold text-slate-800 dark:text-white">Rifas activas</h1>
                         <motion.div
                             variants={container}
                             initial="hidden"
@@ -188,7 +229,7 @@ const Inicio = () => {
                                             : <p className="text-sm text-slate-500 flex gap-1 items-center"><CheckCircle2 className="text-green-600 w-4 h-4" /> Sorteo listo para empezar!</p>}
                                     </div>}
                                     <p className={`${s.numTicketGanadorP1 ? "mt-10" : "mt-0"} flex items-center gap-2 font-bold mb-1`}><Ticket className="w-5 h-5" />{Number(s.precioTicket).toLocaleString()} COP</p>
-                                    {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{s.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays color="black" className="w-5 h-5" /> Se iniciará al vender los tickets</p>}
+                                    {s.fechaSorteo ? <p className="text-slate-500 text-sm flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" />{s.fechaSorteo} 10:40PM</p> : <p className="text-slate-500 flex items-center gap-2"><CalendarDays className="w-5 h-5 dark:text-white text-black" /> Se iniciará al vender los tickets</p>}
                                     {/* <Button onClick={() => navigation(`/sorteo/${s.id}`)} className="my-4 justify-end">Ver detalle del sorteo</Button> */}
                                 </div>
                             </motion.div>)}
