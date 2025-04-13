@@ -556,7 +556,7 @@ const SorteoDetail = () => {
                     <Input type="number" placeholder="Busca tu numero ganador" onChange={(e) => {setFilter(e.target.value); setCurrentPage(1)}} />
                     {
                         !filteredNumeros.length &&
-                        <div className="flex flex-col items-center min-w-[45rem]">
+                        <div className="flex flex-col items-center min-w-full lg:min-w-[45rem]">
                             {/* <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} /> */}
                             <p key={1} className={`flex items-center justify-center text-center mx-auto mt-4 text-slate-500`}>
                                 No hemos conseguido el número que estás buscando
@@ -599,17 +599,6 @@ const SorteoDetail = () => {
                             Siguiente
                         </button>
                     </div>}
-                    {/* {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                        <div className="flex items-center justify-center gap-2">
-                            <MessageCircleWarning />
-                            <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
-                        </div>
-                    </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                        <div className="flex items-center justify-center gap-2">
-                            <CheckCircle2 />
-                            <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
-                        </div>
-                    </div>)} */}
                     
                     <div className="flex gap-4 items-center mt-10">
                     <p className="font-bold">Tus numeros</p>

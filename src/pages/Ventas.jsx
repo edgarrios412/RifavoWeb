@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import axios from "axios"
-import { CalendarDays, CheckCircle2, Coins, MessageCircleWarning, ScanFace, Ticket, Trophy, Users } from "lucide-react"
+import { CalendarDays, CheckCircle2, Coins, Dices, MessageCircleWarning, ScanFace, Ticket, Trophy, Users } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -71,21 +71,21 @@ const Ventas = () => {
     };
 
     const handleCompra = () => {
-        if(form.email === undefined || form.email === "") return toast({ title: "Error", description: "Debes ingresar un correo", variant: "destructive" })
+        if (form.email === undefined || form.email === "") return toast({ title: "Error", description: "Debes ingresar un correo", variant: "destructive" })
         if (form.phone === undefined || form.phone === "") return toast({ title: "Error", description: "Debes ingresar un telefono", variant: "destructive" })
         if (misNumeros.length < sorteo.multiplo) return toast({ title: "Error", description: `Debes seleccionar ${sorteo.multiplo} tickets`, variant: "destructive" })
         if (misNumeros.length % sorteo.multiplo !== 0) return toast({ title: "Error", description: `Debes seleccionar tickets por multiplos de ${sorteo.multiplo}`, variant: "destructive" })
         axios.post("/sorteo/comprar/ticketsFisico", {
-            sorteo:{
+            sorteo: {
                 sorteoId: sorteo.id,
                 tickets: misNumeros
             },
-            user:{
+            user: {
                 email: form.email,
                 phone: form.phone,
                 father: usuario.id,
             },
-            monto: (misNumeros.length * sorteo.precioTicket)*0.1,
+            monto: (misNumeros.length * sorteo.precioTicket) * 0.1,
         }).then(() => {
             updateUsuario()
             axios.get("/sorteo/listar/all").then(({ data }) => setSorteos(data))
@@ -95,6 +95,24 @@ const Ventas = () => {
             setNumerosComprados([])
             setNumeros([])
         }, () => alert("Error al realizar la compra"))
+    }
+
+    const clicSuerte = () => {
+        const disponibles = filteredNumeros.filter(
+            (n) => !numerosComprados.includes(n) && !misNumeros.includes(n)
+        );
+
+        if (disponibles.length === 0) {
+            alert("No quedan números disponibles.");
+            return;
+        }
+
+        // Elegir un número aleatorio de los disponibles
+        const randomIndex = Math.floor(Math.random() * disponibles.length);
+        const randomNumber = disponibles[randomIndex];
+
+        // Agregarlo a tu lista de números
+        setMisNumeros([...misNumeros, randomNumber]);
     }
 
     // Lógica para dividir los números en páginas
@@ -114,10 +132,10 @@ const Ventas = () => {
                     <h1 className="font-bold text-xl">Verificando identidad</h1>
                 </div> :
                 <div className="bg-slate-100 dark:bg-background">
-                    <div className="w-2/3 m-auto min-h-[100vh] h-full pt-40 ">
+                    <div className="sm:w-[80%] md:w-[70%] lg:w-1/2 w-[90%] m-auto min-h-[100vh] h-full pt-40 ">
                         <h1 className="mb-1 font-bold text-xl">Hola, Edgar 👋</h1>
                         <h1 className="mb-6 text-slate-600 dark:text-slate-400">Te damos la bienvenida al panel de ventas de RIFAVO, desde acá puedes vender tickets de forma fisica.</h1>
-                        <div className="w-full grid grid-cols-3 justify-center gap-10">
+                        <div className="w-full flex items-start justify-center gap-10">
                             <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
                                 <div className="flex justify-between items-center">
                                     <p className="font-semibold">Saldo</p>
@@ -125,7 +143,7 @@ const Ventas = () => {
 
                                 </div>
                                 <p className="font-bold text-4xl">${usuario?.income.toLocaleString()}</p>
-                                <p className="text-slate-500">Contacta a un admin para retirar</p>
+                                <p className="text-slate-500 text-sm">Contacta a un admin para retirar</p>
                             </div>
                             {/* <div className="w-full h-40 flex flex-col justify-between rounded-sm shadow-sm bg-white dark:bg-slate-800 p-5">
                                 <div className="flex justify-between items-center">
@@ -149,8 +167,8 @@ const Ventas = () => {
                             <div className="mt-10">
                                 <h1 className="font-bold text-2xl">Vender tickets</h1>
                             </div>
-                            {sorteo == null ? <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-20 mt-6 pb-10">
-                                {sorteos.sort((a, b) => {
+                            {sorteo == null ? <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 mt-6 pb-10">
+                                {sorteos.filter(s => !s.isPublic).sort((a, b) => {
                                     if (a.numTicketGanadorP1 === null && b.numTicketGanadorP1 !== null) {
                                         return -1; // 'a' va antes que 'b'
                                     }
@@ -180,18 +198,18 @@ const Ventas = () => {
                             </div> :
                                 <div>
                                     <Button onClick={() => setSorteo(null)} className="my-4 justify-end">Volver</Button>
-                                    <h2 className="text-3xl font-bold text-center mb-5">Escoge tus numeros</h2>
+                                    <h2 className="text-3xl font-bold text-center mb-5 mt-5">Escoge tus numeros</h2>
                                     <Input type="number" placeholder="Busca tu numero ganador" onChange={(e) => { setFilter(e.target.value); setCurrentPage(1) }} />
                                     {
                                         !filteredNumeros.length &&
-                                        <div className="flex flex-col items-center min-w-[45rem]">
+                                        <div className="flex flex-col items-center min-w-full ">
                                             {/* <Lottie animationData={ani1} style={{ width: "150px", marginTop: "40px" }} loop={true} /> */}
-                                            <p key={1} className={`flex items-center justify-center text-center mx-auto mt-4 text-slate-500`}>
+                                            <p key={1} className={`flex items-center justify-center text-center mx-auto mt-7 text-slate-500`}>
                                                 No hemos conseguido el número que estás buscando
                                             </p>
                                         </div>
                                     }
-                                    <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-10 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-10 gap-3 items-center">
+                                    <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-10 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-7 xl:grid-cols-9 gap-3 items-center">
                                         {currentNumbers.map((index) => {
                                             if (!numerosComprados.includes(index)) {
                                                 return (<p onClick={() => handleNumerosComprados(index)} key={index} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(index) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
@@ -226,21 +244,23 @@ const Ventas = () => {
                                             Siguiente
                                         </button>
                                     </div>}
-                                    {sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                                        <div className="flex items-center justify-center gap-2">
-                                            <MessageCircleWarning />
-                                            <p className="bg-red-600 p-4 rounded-sm text-white">Necesitas seleccionar {sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más</p>
+                                    <div className="flex flex-col xl:flex-row gap-4 xl:items-center items-start mt-10">
+                                        <div className="flex gap-4 items-center">
+                                        <p className="font-bold">Tus numeros</p>
+                                        <Button onClick={clicSuerte} className="h-8 flex gap-2 bg-gradient-to-r from-green-600 via-green-500 to-green-600 animate-gradient-move"><Dices className="w-4" /> Clic de la suerte</Button>
                                         </div>
-                                    </div> : (sorteo.multiplo != 1 && <div className="my-10 p-0 rounded-sm flex items-center gap-6 overflow-hidden h-26">
-                                        <div className="flex items-center justify-center gap-2">
-                                            <CheckCircle2 />
-                                            <p className="bg-green-600 p-4 rounded-sm text-white">Te deseamos mucha suerte!</p>
-                                        </div>
-                                    </div>)}
-                                    <Label className="text-slate-500">Correo</Label>
-                                    <Input placeholder="Ingresar correo electronico" onChange={handleForm} name="email" className="w-80 mt-0 mb-4" />
+                                        <b className="text-slate-600 font-normal">{sorteo.multiplo - (misNumeros.length % sorteo.multiplo) != sorteo.multiplo ? `(Necesitas seleccionar ${sorteo.multiplo - (misNumeros.length % sorteo.multiplo)} tickets más)` : ""}</b>
+                                    </div>
+                                    <div className="max-h-96 overflow-y-auto overflow-x-hidden select-none mt-4 grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-7 xl:grid-cols-9 gap-3 items-center">
+                                        {misNumeros.map(m => <p onClick={() => handleNumerosComprados(m)} key={m} className={`flex items-center justify-center text-center border rounded-sm w-16 h-10 cursor-pointer hover:border-orange-500 transition ${misNumeros.includes(m) ? 'bg-orange-500 text-white' : 'bg-transparent'}`}>
+                                            {m.toString().padStart(String(sorteo.cantidadTicket).length - 1, '0')}
+                                        </p>)}
+                                    </div>
+                                    
+                                    <Label className="text-slate-500 mt-6">Correo</Label>
+                                    <Input placeholder="Ingresar correo electronico" onChange={handleForm} name="email" className="lg:w-80 w-full mt-0 mb-4" />
                                     <Label className="text-slate-500">Teléfono (opcional)</Label>
-                                    <Input placeholder="Ingresar teléfono" onChange={handleForm} name="phone" className="w-80 mt-0 mb-4" />
+                                    <Input placeholder="Ingresar teléfono" onChange={handleForm} name="phone" className="lg:w-80 w-full mt-0 mb-4" />
                                     <AlertDialog>
                                         <AlertDialogTrigger><Button>Vender</Button></AlertDialogTrigger>
                                         <AlertDialogContent>
@@ -251,7 +271,7 @@ const Ventas = () => {
                                                     <br></br>
                                                     Telefono: {form.phone}
                                                     <br></br>
-                                                    Ticket(s): {misNumeros.map(n => n.toString().padStart(sorteo.cantidadTicket.toString().length-1, '0')).join(", ")}
+                                                    Ticket(s): {misNumeros.map(n => n.toString().padStart(sorteo.cantidadTicket.toString().length - 1, '0')).join(", ")}
                                                     <br></br>
                                                     <br></br>
                                                     A pagar: {(misNumeros.length * sorteo.precioTicket).toLocaleString()} COP

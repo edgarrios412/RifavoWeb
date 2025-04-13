@@ -91,7 +91,7 @@ const Inicio = () => {
                     //   itemClass="carousel-item-padding-90-px"
                     className="w-full h-[70vh] mt-20" >
                     {pages.map((p => <div key={p.path} className="w-full h-[71vh] flex items-center justify-center text-white text-3xl">
-                        <img src={p.image} className="w-full h-full absolute z-10" />
+                        <img src={p.image} className="w-full h-full object-cover object-center absolute z-10" />
                         <div className="absolute w-full h-full bg-black opacity-40 z-20"></div>
                         <motion.div initial={{ y: 50, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
@@ -105,7 +105,7 @@ const Inicio = () => {
                         </motion.div>
                     </div>))}
                 </Carousel>
-                <div className="px-96 py-8 bg-slate-100 dark:bg-[#262635] flex gap-10">
+                <div className="py-6 flex items-center justify-center bg-slate-100 dark:bg-[#262635] gap-10">
                     <div>
                         <p className="font-semibold text-slate-900 dark:text-white uppercase text-sm mb-1">Próximo sorteo</p>
                         <div onClick={() => navigation("/sorteo/1")} className="w-60 h-32 bg-white dark:bg-[#14141a] rounded-md shadow-md cursor-pointer hover:shadow-xl transition-all">
@@ -132,7 +132,7 @@ const Inicio = () => {
                             </div>
                         </div>
                     </div>
-                    <Separator className="h-40 dark:bg-[#1f1f29]" orientation="vertical" />
+                    {/* <Separator className="h-40 dark:bg-[#1f1f29]" orientation="vertical" /> */}
                     <div className="flex items-center justify-center flex-col">
                         {/* <p className="text-slate-600">En construccion...</p> */}
                     </div>
@@ -215,8 +215,8 @@ const Inicio = () => {
                                 }
                                 return 0; // Si ambos son iguales, no hay cambio
                             }).sort((a,b) => a.priority - b.priority).map((s, i) => <motion.div key={i} variants={item} onClick={() => navigation(`/sorteo/${s.id}`)} className="cursor-pointer hover:shadow-xl transition-all w-80 lg:w-96 rounded-lg shadow-md bg-white dark:bg-[#262635] shadow-slate-200 dark:shadow-gray-900 pb-10">
-                                {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>Finalizado</p></div>}
-                                {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-sm"><p>En progreso</p></div>}
+                                {s.numTicketGanadorP1 && <div className="text-left m-6 bg-red-400 dark:bg-red-700 w-fit px-5 py-1 rounded-[6px] text-white text-xs uppercase font-semibold"><p>Finalizado</p></div>}
+                                {!s.numTicketGanadorP1 && <div className="text-left m-6 bg-green-500 dark:bg-green-700 w-fit px-5 py-1 rounded-[6px] text-white text-xs uppercase font-semibold"><p>En progreso</p></div>}
                                 <div className="flex items-center justify-center">
                                     <img src={s.image[0]} className="rounded-2xl mx-0 my-6 max-h-72" />
                                 </div>

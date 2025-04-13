@@ -27,7 +27,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ArrowDownToLine, Calculator, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users } from "lucide-react"
+import { ArrowDownToLine, Calculator, CalendarDays, Cctv, History, LogOut, QrCode, Ticket, Trophy, Users, Warehouse } from "lucide-react"
 import { UserContext } from "../context/UserContext"
 import axios from "axios"
 import { Separator } from "../ui/separator"
@@ -418,17 +418,17 @@ const NavBar = () => {
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="gray" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                <span className="text-normal font-bold">
-                                    {!ticket.sorteo.numTicketGanadorP2 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP2}
-                                </span>
+                                    <span className="text-normal font-bold">
+                                        {!ticket.sorteo.numTicketGanadorP2 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP2}
+                                    </span>
                                 </span>
                             </div>
                             <div className="flex items-center pt-1 mt-2">
                                 <Trophy color="brown" className="mr-1 h-4 w-4" />{" "}
                                 <span className="text-normal font-bold">
-                                <span className="text-normal font-bold">
-                                    {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP3}
-                                </span>
+                                    <span className="text-normal font-bold">
+                                        {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : ticket.sorteo.numTicketGanadorP3}
+                                    </span>
                                     {/* {!ticket.sorteo.numTicketGanadorP3 ? "Aún no hay ganador" : <HoverCard>
                                         <HoverCardTrigger><b className="underline">{ticket.sorteo.numTicketGanadorP3}</b></HoverCardTrigger>
                                         <HoverCardContent>
@@ -449,7 +449,7 @@ const NavBar = () => {
                                     </HoverCard>} */}
                                 </span>
                             </div>
-                        <Button className="mt-6" onClick={() => {navigation(`/sorteo/${ticket.sorteo.id}`); setIsOpen(null)}}>Ver sorteo</Button>
+                            <Button className="mt-6" onClick={() => { navigation(`/sorteo/${ticket.sorteo.id}`); setIsOpen(null) }}>Ver sorteo</Button>
                         </div></>}
                 </DialogContent>
             </Dialog>
@@ -493,6 +493,12 @@ const NavBar = () => {
                             <RifavoLight />
                         </div>
                     </a>
+                    <Button className="visible sm:invisible relative cursor-pointer flex items-center gap-2 px-2 py-2 w-fit transition-colors duration-300 mr-2"
+                        variant="outline" onClick={() => navigation("/")}>
+                        <p className="p-2">
+                            <Warehouse className="text-gray-800 dark:text-slate-200 w-5" />
+                        </p>
+                    </Button>
                     <div className="sm:relative sm:left-52">
                         <ModeToggle />
                     </div>
@@ -561,9 +567,9 @@ const NavBar = () => {
                         </DropdownMenuContent>
                     </DropdownMenu> : <Dialog>
                         <DialogTrigger>
-                        <Button className="bg-gradient-to-r from-orange-500 to-red-500 text-white dark:text-white hover:from-orange-600 hover:to-red-600 hover:shadow-lg transition-all duration-300">
-    Ingresa ahora
-  </Button>
+                            <Button className="bg-gradient-to-r from-orange-500 to-red-500 text-white dark:text-white hover:from-orange-600 hover:to-red-600 hover:shadow-lg transition-all duration-300">
+                                Ingresa ahora
+                            </Button>
                         </DialogTrigger>
                         {login ? (recovery ? <DialogContent>
                             <DialogHeader>

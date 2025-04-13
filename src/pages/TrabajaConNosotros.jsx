@@ -22,17 +22,16 @@ const TrabajaConNosotros = () => {
                 </DialogContent>
             </Dialog>
             <div className="w-full gap-2 mt-24 flex-col">
-                <div className="bg-gradient-to-r from-white dark:from-black to-orange-200 w-full h-1/2 flex items-center justify-center overflow-hidden shadow-lg">
-                    <div className="flex flex-col w-1/3">
+                <div className="md:flex-row flex-col bg-gradient-to-r from-white dark:from-black to-orange-200 w-full h-1/2 flex items-center justify-center overflow-hidden shadow-lg">
+                    <div className="flex flex-col md:w-1/3 w-full my-14 md:mx-0 px-10">
                         <p className="text-black dark:text-white text-4xl font-bold">Trabaja con nosotros</p>
                         <p className="text-slate-600 dark:text-slate-400 mt-6">Trabajamos para generar oportunidades que cierren las brechas sociales y construyan un mejor país. Únete a nuestro propósito y descubre cómo tu talento puede hacer la diferencia.</p>
                         <Button onClick={() => setDialog(true)} className="w-40 mt-4">Contactanos</Button>
                     </div>
-                    <img src="https://cms.colsubsidio.com/sites/default/files/2024-10/shutterstock_2509555365_0.png" alt="Hiring" className="w-1/3" />
+                    <img src="https://cms.colsubsidio.com/sites/default/files/2024-10/shutterstock_2509555365_0.png" alt="Hiring" className="sm:w-1/2 md:w-1/3 w-full" />
                 </div>
-                <div className="flex flex-row justify-center items-center gap-8 py-32">
-                    <Lottie animationData={money} style={{ width: "500px" }} loop={true} />
-                    <div className="flex flex-col gap-8 w-1/2">
+                <div className="flex md:flex-row flex-col justify-center items-center gap-8 py-32">
+                    <div className="flex flex-col gap-8 md:w-1/2 w-full md:px-0 sm:px-20 px-10">
                         <h1 className="font-bold text-4xl">Beneficios</h1>
                         <div className="flex items-start gap-4">
                             <CheckCircle2 color="#31bda6" className="mt-1" size={22} />
@@ -63,6 +62,7 @@ const TrabajaConNosotros = () => {
                             </div>
                         </div>
                     </div>
+                    <Lottie animationData={money} className="w-1/3" loop={true} />
                 </div>
             </div>
         </>
